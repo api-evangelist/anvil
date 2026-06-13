@@ -1,0 +1,192 @@
+name: Anvil Plans and Pricing
+description: >-
+  Anvil offers four pricing tiers ranging from a free plan for individuals and
+  small teams to an enterprise plan with custom pricing. All plans include core
+  API access with usage-based overages for PDF operations, e-sign packets, and
+  workflow submissions. Annual billing provides a 20% discount.
+url: https://www.useanvil.com/pricing/
+specificationVersion: '0.1'
+
+plans:
+  - name: Free
+    description: >-
+      Entry-level plan for developers and small teams getting started with
+      Anvil's document automation APIs. Includes starter credits with a valid
+      payment method on file.
+    url: https://www.useanvil.com/pricing/
+    price:
+      amount: 0
+      currency: USD
+      period: month
+    features:
+      - 2 user seats
+      - Unlimited document templates
+      - Unlimited workflow submissions (pay-as-you-go)
+      - Unlimited e-sign packets (pay-as-you-go)
+      - Core API access (REST and GraphQL)
+      - PDF fill and generate API access
+      - Document AI capped at 20 pages per PDF
+      - Logic builder
+      - Compliance features
+      - Development API key (watermarked PDFs, 4 req/sec)
+    limits:
+      - name: Rate limit (production)
+        value: 4
+        unit: requests per second
+      - name: Document AI pages per PDF
+        value: 20
+        unit: pages
+      - name: User seats
+        value: 2
+        unit: seats
+    overages:
+      - name: PDF Fill/Generation
+        price:
+          amount: 0.10
+          currency: USD
+          unit: per PDF
+      - name: Workflow submission
+        price:
+          amount: 1.00
+          currency: USD
+          unit: per submission
+      - name: E-sign packet
+        price:
+          amount: 1.50
+          currency: USD
+          unit: per packet
+
+  - name: AI Pack
+    description: >-
+      Adds AI-powered document intelligence features including automatic field
+      detection, box finding, and schema mapping to accelerate workflow
+      building from existing PDFs.
+    url: https://www.useanvil.com/pricing/
+    price:
+      amount: 99
+      currency: USD
+      period: month
+      annualAmount: 79
+      annualNote: Billed annually ($948/year)
+    features:
+      - All Free plan features
+      - 5 user seats
+      - Document AI API access (all AI features)
+      - Automatic box finding
+      - Automatic field labeling
+      - Schema mapping
+      - Document AI up to 50 pages per PDF
+    limits:
+      - name: Rate limit (production)
+        value: 4
+        unit: requests per second
+      - name: Document AI pages per PDF
+        value: 50
+        unit: pages
+      - name: User seats
+        value: 5
+        unit: seats
+    overages:
+      - name: PDF Fill/Generation
+        price:
+          amount: 0.10
+          currency: USD
+          unit: per PDF
+      - name: Workflow submission
+        price:
+          amount: 1.00
+          currency: USD
+          unit: per submission
+      - name: E-sign packet
+        price:
+          amount: 1.50
+          currency: USD
+          unit: per packet
+
+  - name: Product Pack
+    description: >-
+      Full-featured plan for teams embedding Anvil deeply into products.
+      Includes advanced signing flows, white-labeling, custom branding,
+      higher rate limits, and priority support.
+    url: https://www.useanvil.com/pricing/
+    price:
+      amount: 425
+      currency: USD
+      period: month
+      annualAmount: 340
+      annualNote: Billed annually ($4,080/year)
+    features:
+      - All AI Pack features
+      - 5 user seats
+      - Interactive e-signing
+      - Progressive signing
+      - Unordered signing flows
+      - White-labeling and custom brand colors
+      - Priority support
+      - 40 requests/second production rate limit
+    limits:
+      - name: Rate limit (production)
+        value: 40
+        unit: requests per second
+      - name: User seats
+        value: 5
+        unit: seats
+    overages:
+      - name: PDF Fill/Generation
+        price:
+          amount: 0.10
+          currency: USD
+          unit: per PDF
+      - name: Workflow submission
+        price:
+          amount: 1.00
+          currency: USD
+          unit: per submission
+      - name: E-sign packet
+        price:
+          amount: 1.50
+          currency: USD
+          unit: per packet
+    bulkDiscounts:
+      - threshold: 25000
+        note: Tiered volume discounts available up to 55% off at highest volumes
+        contact: https://www.useanvil.com/pricing/
+
+  - name: Enterprise
+    description: >-
+      Custom plan for large organizations requiring unlimited seats, advanced
+      compliance (HIPAA/BAA), SSO, embedded workflow builders, dynamic
+      workflows, and dedicated support.
+    url: https://www.useanvil.com/pricing/
+    price:
+      amount: custom
+      currency: USD
+      period: month
+      note: Contact Anvil sales for pricing
+    features:
+      - Unlimited user seats
+      - All Product Pack features
+      - Embedded workflow builders
+      - Dynamic workflows
+      - SSO (Single Sign-On)
+      - HIPAA/BAA compliance
+      - Custom advanced features
+      - Dedicated support
+      - Custom rate limits
+      - SLA agreements
+    contact: https://www.useanvil.com/contact/
+
+starterCredits:
+  description: >-
+    Accounts with a valid payment method on file receive starter credits to
+    begin testing in production.
+  credits:
+    - name: PDF Fill/Generation credits
+      value: 2500
+      unit: operations
+    - name: Workflow submission credits
+      value: 25
+      unit: submissions
+    - name: E-sign packet credits
+      value: 25
+      unit: packets

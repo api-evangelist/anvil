@@ -1,0 +1,81 @@
+name: Anvil API Rate Limits
+description: >-
+  Anvil enforces rate limits per API key type (development vs. production) and
+  per subscription plan. Development API keys are more aggressively limited
+  and produce watermarked PDFs. Production keys on subscription plans receive
+  significantly higher throughput. The API returns standard rate-limit headers
+  and a 429 status when limits are exceeded.
+url: https://www.useanvil.com/docs/api/getting-started/
+specificationVersion: '0.1'
+
+rateLimits:
+  - name: Development API Key
+    description: >-
+      Applies to all requests made with the development API key, regardless
+      of plan. PDFs produced are watermarked and not suitable for production
+      use. Intended for integration testing and local development.
+    scope: per API key
+    limit: 4
+    period: second
+    unit: requests
+    notes:
+      - PDFs are watermarked when using this key
+      - Not suitable for production traffic
+      - Available on all plans including Free
+
+  - name: Production API Key — Free / Pay-as-you-go
+    description: >-
+      Production rate limit for accounts on the Free plan or pay-as-you-go
+      without an active subscription. PDFs are not watermarked.
+    scope: per API key
+    limit: 4
+    period: second
+    unit: requests
+    plans:
+      - Free
+      - Pay-as-you-go (no subscription)
+
+  - name: Production API Key — All Subscriptions
+    description: >-
+      Elevated production rate limit available to all paid subscription plans
+      (AI Pack, Product Pack, Enterprise). Enables higher-throughput
+      production workloads.
+    scope: per API key
+    limit: 40
+    period: second
+    unit: requests
+    plans:
+      - AI Pack
+      - Product Pack
+      - Enterprise
+
+responseHeaders:
+  - name: X-RateLimit-Limit
+    description: The maximum number of requests allowed in the current window
+  - name: X-RateLimit-Remaining
+    description: The number of requests remaining in the current window
+  - name: X-RateLimit-Reset
+    description: Unix timestamp when the current rate-limit window resets
+
+errorHandling:
+  - statusCode: 429
+    description: Too Many Requests — rate limit exceeded
+    headers:
+      - name: Retry-After
+        description: >-
+          Number of seconds to wait before making another request.
+          Clients should respect this header and implement exponential
+          backoff for resilient integrations.
+    recommendation: >-
+      Implement exponential backoff with jitter. Cache Retry-After header
+      value and wait the specified duration before retrying. Consider
+      request queuing for batch PDF operations to stay within limits.
+
+bulkOperationGuidance:
+  description: >-
+    For batch PDF filling or generation jobs, Anvil recommends queuing
+    requests to stay within rate limits. Node.js and Python SDKs include
+    utilities for managing concurrent requests. Contact Anvil for
+    Enterprise custom rate limit arrangements if standard limits are
+    insufficient for your workload.
+  contact: https://www.useanvil.com/contact/

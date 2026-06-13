@@ -1,0 +1,167 @@
+name: Anvil FinOps Framework
+description: >-
+  FinOps cost management guidance for Anvil API consumption aligned to the
+  FOCUS (FinOps Open Cost and Usage Specification) 1.0 framework. Covers
+  cost allocation, usage tracking, optimization strategies, and chargeback
+  models for teams using Anvil's PDF, e-sign, and document automation APIs.
+url: https://www.useanvil.com/pricing/
+specificationVersion: '1.0'
+
+provider:
+  name: Anvil
+  url: https://www.useanvil.com/
+  billingPortal: https://app.useanvil.com/org/settings/billing
+
+focusAlignment:
+  version: '1.0'
+  note: >-
+    Anvil uses a hybrid subscription + consumption billing model. Fixed
+    monthly/annual subscription fees cover platform access and rate limits;
+    variable consumption fees apply per PDF operation, e-sign packet, and
+    workflow submission beyond included starter credits.
+
+costCategories:
+  - name: Subscription Fees
+    type: Fixed
+    description: >-
+      Recurring monthly or annual fees for the chosen plan tier. Provides
+      platform access, user seats, and elevated rate limits.
+    billingModel: flat-rate
+    plans:
+      - name: Free
+        monthlyCost: 0
+        annualCost: 0
+      - name: AI Pack
+        monthlyCost: 99
+        annualCost: 948
+        annualSavings: 240
+      - name: Product Pack
+        monthlyCost: 425
+        annualCost: 4080
+        annualSavings: 1020
+      - name: Enterprise
+        monthlyCost: custom
+        annualCost: custom
+
+  - name: PDF API Consumption
+    type: Variable
+    description: >-
+      Per-operation charges for PDF filling and PDF generation API calls
+      beyond included starter credits. Billed at $0.10 per PDF.
+    billingModel: pay-as-you-go
+    unit: PDF operation
+    unitCost:
+      amount: 0.10
+      currency: USD
+    focusMetric: UsageQuantity
+    focusUnit: PDFOperations
+    trackingRecommendation: >-
+      Tag PDF operations by department, product line, or customer using
+      Anvil's template IDs and cast IDs. Export API usage logs for
+      allocation to internal cost centers.
+
+  - name: Workflow Submission Consumption
+    type: Variable
+    description: >-
+      Per-submission charges for workflow completions beyond starter credits.
+    billingModel: pay-as-you-go
+    unit: workflow submission
+    unitCost:
+      amount: 1.00
+      currency: USD
+    focusMetric: UsageQuantity
+    focusUnit: WorkflowSubmissions
+
+  - name: E-Sign Packet Consumption
+    type: Variable
+    description: >-
+      Per-packet charges for Etch e-sign packets initiated beyond starter credits.
+    billingModel: pay-as-you-go
+    unit: e-sign packet
+    unitCost:
+      amount: 1.50
+      currency: USD
+    focusMetric: UsageQuantity
+    focusUnit: ESignPackets
+
+costOptimization:
+  - name: Annual Billing Discount
+    description: >-
+      Switch from monthly to annual billing to receive a 20% discount on
+      subscription fees. AI Pack saves $240/year; Product Pack saves $1,020/year.
+    savingsPercentage: 20
+    applicablePlans:
+      - AI Pack
+      - Product Pack
+
+  - name: Bulk Volume Discounts
+    description: >-
+      For organizations processing 25,000+ PDF operations, workflow
+      submissions, or e-sign packets per month, Anvil offers tiered volume
+      discounts up to 55% off per-unit rates. Contact sales to negotiate
+      pre-purchased credit bundles.
+    minimumVolume: 25000
+    maxDiscount: 55
+    unit: percent
+    contact: https://www.useanvil.com/pricing/
+
+  - name: Development vs Production Key Usage
+    description: >-
+      Use development API keys exclusively for testing and CI/CD pipelines
+      to avoid incurring production consumption charges. Development keys
+      produce watermarked PDFs and carry a 4 req/sec limit — ideal for
+      non-billable test workloads.
+    saving: Avoids accidental production billing during development
+
+  - name: Starter Credits Utilization
+    description: >-
+      Accounts with a valid payment method receive 2,500 PDF credits, 25
+      workflow submissions, and 25 e-sign packets as starter credits. Fully
+      utilize these before incurring overages. Plan integration testing to
+      consume starter credits first.
+
+  - name: Right-Sizing Plan Selection
+    description: >-
+      Teams primarily using Document AI features should evaluate the AI Pack
+      ($99/month) vs. Free + pay-as-you-go. Teams needing white-labeling,
+      advanced signing, and 40 req/sec throughput require the Product Pack.
+      Model monthly operation volumes against per-unit overage costs to
+      determine crossover points.
+    crossoverAnalysis:
+      - note: >-
+          At $0.10/PDF, the AI Pack ($99/month) breaks even vs. Free plan
+          at approximately 990 additional PDF operations per month beyond
+          starter credits (not counting AI feature value).
+
+chargebackModel:
+  description: >-
+    For teams allocating Anvil costs across business units or customers,
+    track usage by Anvil organization or sub-account. Use template IDs and
+    cast references in API calls as cost allocation keys. Map to FOCUS
+    ChargebackCostAllocation taxonomy.
+  allocationKeys:
+    - name: templateId
+      description: PDF template identifier — map to product line or department
+    - name: organizationSlug
+      description: Anvil organization slug — use separate orgs for hard cost isolation
+    - name: apiKeyType
+      description: >-
+        dev vs. production — exclude dev-key usage from chargebacks
+  focusFields:
+    - field: ResourceId
+      mapping: Anvil API key or organization ID
+    - field: SubAccountId
+      mapping: Anvil organization slug
+    - field: ServiceName
+      mapping: Anvil PDF API / Etch E-Sign / Workflows / Document AI
+    - field: ChargeType
+      mapping: Usage (consumption) or Recurring (subscription)
+
+budgetAlerts:
+  recommendation: >-
+    Set monthly budget alerts via your finance tooling or cloud cost platform
+    (e.g., AWS Cost Explorer if routing billing through AWS Marketplace) to
+    flag when Anvil API consumption approaches 80% of monthly budget.
+    Anvil does not natively expose webhook-based spend alerts; monitor usage
+    via the Anvil dashboard and API usage logs.
+  monitoringUrl: https://app.useanvil.com/org/settings/billing
