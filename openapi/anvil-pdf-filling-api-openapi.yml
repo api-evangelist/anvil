@@ -1,0 +1,204 @@
+openapi: 3.0.3
+info:
+  title: Anvil PDF Filling API
+  description: >-
+    Fill existing PDF templates with JSON data. Send structured data to a PDF
+    template and receive a filled PDF document. Supports text, checkboxes,
+    signatures, and other form fields. Returns a binary PDF stream.
+  version: 1.0.0
+  contact:
+    name: Anvil Support
+    url: https://www.useanvil.com/docs/
+  license:
+    name: Proprietary
+    url: https://www.useanvil.com/terms/
+servers:
+  - url: https://app.useanvil.com
+    description: Anvil production server
+
+security:
+  - basicAuth: []
+
+paths:
+  /api/v1/fill/{pdfTemplateID}.pdf:
+    post:
+      operationId: fillPdf
+      summary: Fill a PDF template with data
+      description: >-
+        Fill an existing PDF template with JSON data. The template must be
+        created in the Anvil app. Provide the template ID in the path and supply
+        field data in the request body. Returns binary PDF bytes on success.
+      parameters:
+        - name: pdfTemplateID
+          in: path
+          required: true
+          description: The unique identifier of the PDF template to fill.
+          schema:
+            type: string
+        - name: versionNumber
+          in: query
+          required: false
+          description: >-
+            Version number of the template to fill. Use -1 to fill the
+            unpublished (draft) version.
+          schema:
+            type: integer
+            default: -1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FillPdfRequest'
+            example:
+              title: My Filled Document
+              fontSize: 10
+              textColor: '#333333'
+              data:
+                name: Jane Smith
+                date: '2026-06-13'
+                signature: Jane Smith
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FillPdfRequest'
+      responses:
+        '200':
+          description: Binary PDF bytes of the filled document.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Validation error in the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Template not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          headers:
+            Retry-After:
+              description: Seconds to wait before retrying.
+              schema:
+                type: integer
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: >-
+        HTTP Basic Auth using your Anvil API key as the username and an empty
+        string as the password.
+
+  schemas:
+    FillPdfRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Optional title to encode into the PDF document metadata.
+        fontFamily:
+          type: string
+          description: Font family to use for text fields. Default is Noto Sans.
+          default: Noto Sans
+        fontSize:
+          type: integer
+          description: Font size for text fields in points.
+          default: 10
+          minimum: 1
+          maximum: 100
+        textColor:
+          type: string
+          description: Hex color code (6 digits) for text fields.
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          example: '#3E3E57'
+        alignment:
+          type: string
+          description: Text alignment for text fields.
+          enum:
+            - left
+            - center
+            - right
+          default: left
+        fontWeight:
+          type: string
+          description: Font weight for text fields.
+          enum:
+            - normal
+            - bold
+            - italic
+            - boldItalic
+          default: normal
+        useInteractiveFields:
+          type: boolean
+          description: >-
+            When true, preserves interactive/fillable fields in the output PDF
+            rather than flattening them.
+          default: false
+        defaultReadOnly:
+          type: boolean
+          description: >-
+            When true, all fields are set as read-only in the output PDF.
+          default: false
+        data:
+          oneOf:
+            - type: object
+              description: >-
+                Key-value pairs where keys are field aliases from the template
+                and values are the data to fill. Fields not specified will be
+                ignored.
+              additionalProperties: true
+            - type: array
+              description: >-
+                Array of data objects for multi-page or multi-section filling.
+              items:
+                type: object
+                additionalProperties: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Error type name.
+          example: ValidationError
+        message:
+          type: string
+          description: Human-readable error message.
+        fields:
+          type: array
+          description: Field-level validation errors.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              property:
+                type: string

@@ -1,0 +1,117 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "schema": "https://schema.org/",
+    "anvil": "https://www.useanvil.com/docs/api/",
+
+    "Anvil": "anvil:Anvil",
+    "AnvilAPI": "anvil:AnvilAPI",
+
+    "PDFTemplate": {
+      "@id": "anvil:PDFTemplate",
+      "@type": "@id"
+    },
+    "EtchPacket": {
+      "@id": "anvil:EtchPacket",
+      "@type": "@id"
+    },
+    "Signer": {
+      "@id": "anvil:Signer",
+      "@type": "@id"
+    },
+    "WebForm": {
+      "@id": "anvil:WebForm",
+      "@type": "@id"
+    },
+    "Workflow": {
+      "@id": "anvil:Workflow",
+      "@type": "@id"
+    },
+    "WebhookEvent": {
+      "@id": "anvil:WebhookEvent",
+      "@type": "@id"
+    },
+
+    "pdfTemplateID": {
+      "@id": "anvil:pdfTemplateID",
+      "@type": "xsd:string"
+    },
+    "fieldAlias": {
+      "@id": "anvil:fieldAlias",
+      "@type": "xsd:string"
+    },
+    "versionNumber": {
+      "@id": "anvil:versionNumber",
+      "@type": "xsd:integer"
+    },
+    "signingUrl": {
+      "@id": "anvil:signingUrl",
+      "@type": "@id"
+    },
+    "apiKey": {
+      "@id": "anvil:apiKey",
+      "@type": "xsd:string"
+    },
+
+    "fillPdf": {
+      "@id": "anvil:fillPdf"
+    },
+    "generatePdf": {
+      "@id": "anvil:generatePdf"
+    },
+    "ocrExtraction": {
+      "@id": "anvil:ocrExtraction"
+    },
+
+    "graphqlEndpoint": {
+      "@id": "anvil:graphqlEndpoint",
+      "@type": "@id"
+    },
+    "graphqlSchema": {
+      "@id": "anvil:graphqlSchema",
+      "@type": "@id"
+    },
+    "restEndpoint": {
+      "@id": "anvil:restEndpoint",
+      "@type": "@id"
+    },
+
+    "name": "schema:name",
+    "description": "schema:description",
+    "url": {
+      "@id": "schema:url",
+      "@type": "@id"
+    },
+    "documentation": {
+      "@id": "schema:documentation",
+      "@type": "@id"
+    },
+    "provider": {
+      "@id": "schema:provider",
+      "@type": "@id"
+    },
+
+    "anvil:PDFFillingAPI": {
+      "@id": "anvil:PDFFillingAPI",
+      "restEndpoint": "https://app.useanvil.com/api/v1/fill/{pdfTemplateID}.pdf",
+      "documentation": "https://www.useanvil.com/docs/api/fill-pdf/"
+    },
+    "anvil:PDFGenerationAPI": {
+      "@id": "anvil:PDFGenerationAPI",
+      "restEndpoint": "https://app.useanvil.com/api/v1/generate-pdf",
+      "documentation": "https://www.useanvil.com/docs/api/generate-pdf/"
+    },
+    "anvil:EtchESignAPI": {
+      "@id": "anvil:EtchESignAPI",
+      "graphqlEndpoint": "https://app.useanvil.com/graphql",
+      "documentation": "https://www.useanvil.com/docs/api/e-signatures/"
+    },
+    "anvil:GraphQLAPI": {
+      "@id": "anvil:GraphQLAPI",
+      "graphqlEndpoint": "https://app.useanvil.com/graphql",
+      "graphqlSchema": "https://app.useanvil.com/graphql/sdl",
+      "documentation": "https://www.useanvil.com/docs/api/graphql/"
+    }
+  }
+}

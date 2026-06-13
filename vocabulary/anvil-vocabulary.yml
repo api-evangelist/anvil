@@ -1,0 +1,150 @@
+vocabulary:
+  provider: anvil
+  name: Anvil API Vocabulary
+  description: >-
+    Domain vocabulary for the Anvil PDF infrastructure platform, covering
+    concepts related to PDF filling, PDF generation, e-signatures, document
+    automation, OCR, GraphQL APIs, webhooks, and web forms.
+  terms:
+    - term: pdfTemplate
+      label: PDF Template
+      description: >-
+        A pre-created PDF document in the Anvil app with defined fillable fields.
+        Templates are identified by a unique pdfTemplateID and can have multiple
+        published versions.
+      type: resource
+
+    - term: pdfTemplateID
+      label: PDF Template ID
+      description: >-
+        The unique identifier for a PDF template in the Anvil platform. Used as
+        a path parameter in the PDF filling endpoint.
+      type: identifier
+
+    - term: fieldAlias
+      label: Field Alias
+      description: >-
+        A named identifier for a fillable field within a PDF template. Used as
+        a key in the data object when filling a template.
+      type: property
+
+    - term: fillPdf
+      label: Fill PDF
+      description: >-
+        The operation of populating a PDF template's fields with structured JSON
+        data via POST /api/v1/fill/{pdfTemplateID}.pdf.
+      type: operation
+
+    - term: generatePdf
+      label: Generate PDF
+      description: >-
+        The operation of creating a new PDF from scratch using HTML/CSS or
+        structured Markdown content via POST /api/v1/generate-pdf.
+      type: operation
+
+    - term: etchPacket
+      label: Etch Packet
+      description: >-
+        An e-signature collection unit in Anvil Etch. Contains one or more
+        documents routed to one or more signers for electronic signature
+        collection.
+      type: resource
+
+    - term: signer
+      label: Signer
+      description: >-
+        A person designated to sign one or more documents within an Etch packet.
+        Each signer has a routing order and may sign interactively or via
+        progressive flow.
+      type: resource
+
+    - term: signingUrl
+      label: Signing URL
+      description: >-
+        A unique URL generated for each signer in an Etch packet that allows
+        them to view and sign their assigned documents.
+      type: property
+
+    - term: webhookEvent
+      label: Webhook Event
+      description: >-
+        An HTTP POST callback sent to a configured endpoint when an Anvil
+        workflow event occurs, such as e-sign packet completion or web form
+        submission.
+      type: event
+
+    - term: webForm
+      label: Web Form
+      description: >-
+        A dynamic online form built with Anvil's web form builder. Can trigger
+        PDF generation, e-signature collection, or workflow steps on submission.
+      type: resource
+
+    - term: documentAI
+      label: Document AI
+      description: >-
+        Anvil's AI-powered capability for extracting structured data from
+        uploaded PDF documents using OCR, automatic field detection, box
+        finding, and schema mapping.
+      type: capability
+
+    - term: ocrExtraction
+      label: OCR Extraction
+      description: >-
+        Optical character recognition processing applied to PDF documents to
+        extract text and field data for workflow automation.
+      type: operation
+
+    - term: apiKey
+      label: API Key
+      description: >-
+        The credential used to authenticate with Anvil REST APIs via HTTP Basic
+        Auth. The key is used as the username with an empty password.
+      type: credential
+
+    - term: rateLimit
+      label: Rate Limit
+      description: >-
+        API usage throttle enforced by Anvil. Rate limit status is communicated
+        via X-RateLimit-Limit, X-RateLimit-Remaining, and X-RateLimit-Reset
+        response headers. HTTP 429 is returned when exceeded.
+      type: constraint
+
+    - term: graphqlEndpoint
+      label: GraphQL Endpoint
+      description: >-
+        The primary Anvil API interface at https://app.useanvil.com/graphql
+        (also accessible at https://graphql.useanvil.com). Supports queries
+        and mutations for e-sign packets, workflows, PDF operations, webforms,
+        and document AI.
+      type: endpoint
+
+    - term: graphqlSchema
+      label: GraphQL Schema
+      description: >-
+        The complete GraphQL SDL schema for the Anvil API, downloadable via
+        GET https://app.useanvil.com/graphql/sdl.
+      type: resource
+
+    - term: workflow
+      label: Workflow
+      description: >-
+        An automated business process in Anvil that chains together web forms,
+        PDF generation, e-signature collection, and other steps into a cohesive
+        paperwork automation pipeline.
+      type: resource
+
+    - term: versionNumber
+      label: Version Number
+      description: >-
+        An integer identifying which published version of a PDF template to use
+        when filling. Use -1 to target the unpublished draft version.
+      type: parameter
+
+    - term: interactiveFields
+      label: Interactive Fields
+      description: >-
+        PDF form fields that remain fillable/interactive in the output PDF
+        rather than being flattened into static content. Controlled by the
+        useInteractiveFields request parameter.
+      type: feature

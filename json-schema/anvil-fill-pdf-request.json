@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anvil/main/json-schema/anvil-fill-pdf-request.json",
+  "title": "Anvil Fill PDF Request",
+  "description": "Request body schema for the Anvil PDF Filling API endpoint POST /api/v1/fill/{pdfTemplateID}.pdf",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Optional title to encode into the PDF document metadata."
+    },
+    "fontFamily": {
+      "type": "string",
+      "description": "Font family for text fields. Default is Noto Sans.",
+      "default": "Noto Sans"
+    },
+    "fontSize": {
+      "type": "integer",
+      "description": "Font size for text fields in points.",
+      "default": 10,
+      "minimum": 1,
+      "maximum": 100
+    },
+    "textColor": {
+      "type": "string",
+      "description": "Hex color code (6 digits) for text field color.",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "examples": ["#3E3E57", "#000000"]
+    },
+    "alignment": {
+      "type": "string",
+      "description": "Text alignment for text fields.",
+      "enum": ["left", "center", "right"],
+      "default": "left"
+    },
+    "fontWeight": {
+      "type": "string",
+      "description": "Font weight for text fields.",
+      "enum": ["normal", "bold", "italic", "boldItalic"],
+      "default": "normal"
+    },
+    "useInteractiveFields": {
+      "type": "boolean",
+      "description": "When true, preserves interactive/fillable fields instead of flattening.",
+      "default": false
+    },
+    "defaultReadOnly": {
+      "type": "boolean",
+      "description": "When true, all fields are set as read-only in the output.",
+      "default": false
+    },
+    "data": {
+      "description": "Field data to fill into the template. Keys are field aliases.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Single set of field values keyed by field alias."
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "description": "Array of field value objects for multi-section templates."
+        }
+      ]
+    }
+  }
+}

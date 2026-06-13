@@ -1,0 +1,16 @@
+{
+  "provider": "anvil",
+  "blogUrl": "https://www.useanvil.com/blog/",
+  "engineeringBlogUrl": "https://www.useanvil.com/blog/engineering/",
+  "lastFetched": "2026-06-13",
+  "notes": "Anvil blog content is dynamically loaded (JavaScript-rendered). Static fetch returns a loading state with 0 posts rendered. Requires a headless browser to retrieve full post list. Engineering blog is at /blog/engineering/.",
+  "posts": [
+    {
+      "title": "Best Document Automation Software in 2026",
+      "url": "https://www.useanvil.com/blog/digital-transformation/best-document-automation-software-apis-2026/",
+      "category": "digital-transformation",
+      "date": null,
+      "description": "A guide examining top document automation solutions and APIs available in 2026."
+    }
+  ]
+}

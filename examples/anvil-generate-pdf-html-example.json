@@ -1,0 +1,35 @@
+{
+  "summary": "Generate a PDF invoice from HTML/CSS",
+  "description": "Example request to POST /api/v1/generate-pdf using HTML and CSS content.",
+  "request": {
+    "method": "POST",
+    "url": "https://app.useanvil.com/api/v1/generate-pdf",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Basic YOUR_BASE64_ENCODED_API_KEY"
+    },
+    "body": {
+      "type": "html",
+      "title": "Invoice #1042",
+      "data": {
+        "html": "<!DOCTYPE html><html><body><h1>Invoice #1042</h1><table><tr><th>Item</th><th>Amount</th></tr><tr><td>API Integration Services</td><td>$2,500.00</td></tr><tr><td>Document Automation Setup</td><td>$1,200.00</td></tr><tr><td><strong>Total</strong></td><td><strong>$3,700.00</strong></td></tr></table></body></html>",
+        "css": "body { font-family: Arial, sans-serif; margin: 40px; } h1 { color: #2c3e50; } table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; text-align: left; } th { background-color: #f2f2f2; }"
+      },
+      "page": {
+        "width": "8.5in",
+        "height": "11in",
+        "marginTop": "1in",
+        "marginBottom": "1in",
+        "marginLeft": "1in",
+        "marginRight": "1in"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/pdf"
+    },
+    "body": "<binary PDF bytes>"
+  }
+}

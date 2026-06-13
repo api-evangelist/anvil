@@ -1,0 +1,248 @@
+openapi: 3.0.3
+info:
+  title: Anvil PDF Generation API
+  description: >-
+    Generate new PDFs dynamically from HTML/CSS, structured Markdown, or
+    Anvil's JSON-based layout definition. POST your content to
+    /api/v1/generate-pdf and receive a binary PDF stream in return.
+  version: 1.0.0
+  contact:
+    name: Anvil Support
+    url: https://www.useanvil.com/docs/
+  license:
+    name: Proprietary
+    url: https://www.useanvil.com/terms/
+servers:
+  - url: https://app.useanvil.com
+    description: Anvil production server
+
+security:
+  - basicAuth: []
+
+paths:
+  /api/v1/generate-pdf:
+    post:
+      operationId: generatePdf
+      summary: Generate a PDF from HTML or Markdown
+      description: >-
+        Generate a new PDF from HTML/CSS content or structured Markdown. Accepts
+        a JSON payload describing the content type and data. Returns binary PDF
+        bytes on success. For payloads exceeding 1 MB, use multipart/form-data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeneratePdfRequest'
+            examples:
+              htmlExample:
+                summary: HTML/CSS to PDF
+                value:
+                  type: html
+                  title: Invoice
+                  data:
+                    html: '<h1>Hello World</h1><p>This is my PDF.</p>'
+                    css: 'h1 { color: #333; }'
+              markdownExample:
+                summary: Markdown to PDF
+                value:
+                  type: markdown
+                  title: Report
+                  fontSize: 12
+                  textColor: '#333333'
+                  data:
+                    - label: Introduction
+                      content: This is the introduction section.
+                    - label: Summary
+                      content: This is the summary section.
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GeneratePdfRequest'
+      responses:
+        '200':
+          description: Binary PDF bytes of the generated document.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Validation error in the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          headers:
+            Retry-After:
+              description: Seconds to wait before retrying.
+              schema:
+                type: integer
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: >-
+        HTTP Basic Auth using your Anvil API key as the username and an empty
+        string as the password.
+
+  schemas:
+    GeneratePdfRequest:
+      type: object
+      required:
+        - data
+      properties:
+        type:
+          type: string
+          description: >-
+            Content type of the data payload. Use "html" for HTML/CSS content
+            or "markdown" for structured Markdown sections.
+          enum:
+            - html
+            - markdown
+          default: markdown
+        title:
+          type: string
+          description: Title to encode into the PDF document metadata.
+        data:
+          description: >-
+            Content to render as a PDF. Format depends on the "type" field.
+          oneOf:
+            - $ref: '#/components/schemas/HtmlPdfData'
+            - type: array
+              items:
+                $ref: '#/components/schemas/MarkdownPdfSection'
+        page:
+          $ref: '#/components/schemas/PageSettings'
+        fontSize:
+          type: number
+          description: >-
+            Font size for Markdown rendering (points). Applies only when
+            type is "markdown".
+          minimum: 5
+          maximum: 30
+        textColor:
+          type: string
+          description: >-
+            Hex color code for text. Applies only when type is "markdown".
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          example: '#333333'
+        fontFamily:
+          type: string
+          description: >-
+            Font family for text rendering. Applies only when type is "markdown".
+        includeTimestamp:
+          type: boolean
+          description: >-
+            When true, includes a timestamp in the generated PDF. Applies only
+            when type is "markdown".
+          default: true
+        logo:
+          $ref: '#/components/schemas/LogoSettings'
+
+    HtmlPdfData:
+      type: object
+      description: HTML/CSS content for PDF generation.
+      properties:
+        html:
+          type: string
+          description: HTML markup string to render as a PDF.
+        css:
+          type: string
+          description: CSS stylesheet string to apply to the HTML content.
+
+    MarkdownPdfSection:
+      type: object
+      description: A single section of structured Markdown content.
+      properties:
+        label:
+          type: string
+          description: Section heading or label.
+        content:
+          type: string
+          description: Markdown-formatted text content for this section.
+        table:
+          type: object
+          description: Optional table data to include in this section.
+          additionalProperties: true
+
+    PageSettings:
+      type: object
+      description: Page size and margin settings.
+      properties:
+        width:
+          type: string
+          description: Page width (e.g., "8.5in", "216mm").
+        height:
+          type: string
+          description: Page height (e.g., "11in", "279mm").
+        marginTop:
+          type: string
+          description: Top margin (e.g., "1in", "25.4mm").
+        marginBottom:
+          type: string
+          description: Bottom margin.
+        marginLeft:
+          type: string
+          description: Left margin.
+        marginRight:
+          type: string
+          description: Right margin.
+
+    LogoSettings:
+      type: object
+      description: Logo configuration for Markdown-generated PDFs.
+      properties:
+        src:
+          type: string
+          format: uri
+          description: URL of the logo image.
+        width:
+          type: string
+          description: Logo display width.
+        height:
+          type: string
+          description: Logo display height.
+
+    ErrorResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Error type name.
+          example: ValidationError
+        message:
+          type: string
+          description: Human-readable error message.
+        fields:
+          type: array
+          description: Field-level validation errors.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              property:
+                type: string

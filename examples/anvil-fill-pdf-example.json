@@ -1,0 +1,36 @@
+{
+  "summary": "Fill a PDF template with employee onboarding data",
+  "description": "Example request to POST /api/v1/fill/{pdfTemplateID}.pdf filling a W-4 style employee form.",
+  "request": {
+    "method": "POST",
+    "url": "https://app.useanvil.com/api/v1/fill/abc123.pdf",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Basic YOUR_BASE64_ENCODED_API_KEY"
+    },
+    "body": {
+      "title": "Employee W-4 - Jane Smith",
+      "fontSize": 10,
+      "textColor": "#3E3E57",
+      "alignment": "left",
+      "data": {
+        "employeeName": "Jane Smith",
+        "socialSecurityNumber": "***-**-1234",
+        "address": "123 Main St",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94105",
+        "filingStatus": "Single",
+        "date": "2026-06-13",
+        "signature": "Jane Smith"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/pdf"
+    },
+    "body": "<binary PDF bytes>"
+  }
+}

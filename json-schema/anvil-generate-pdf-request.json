@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anvil/main/json-schema/anvil-generate-pdf-request.json",
+  "title": "Anvil Generate PDF Request",
+  "description": "Request body schema for the Anvil PDF Generation API endpoint POST /api/v1/generate-pdf",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "Content type. 'html' for HTML/CSS, 'markdown' for structured Markdown.",
+      "enum": ["html", "markdown"],
+      "default": "markdown"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title to encode into the PDF document metadata."
+    },
+    "data": {
+      "description": "Content to render. Format depends on the 'type' field.",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "HTML/CSS data object (used when type is 'html').",
+          "properties": {
+            "html": {
+              "type": "string",
+              "description": "HTML markup to render as PDF."
+            },
+            "css": {
+              "type": "string",
+              "description": "CSS stylesheet to apply to the HTML."
+            }
+          }
+        },
+        {
+          "type": "array",
+          "description": "Markdown sections (used when type is 'markdown').",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Section heading."
+              },
+              "content": {
+                "type": "string",
+                "description": "Markdown-formatted content."
+              },
+              "table": {
+                "type": "object",
+                "description": "Optional table data.",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "page": {
+      "type": "object",
+      "description": "Page size and margin settings.",
+      "properties": {
+        "width": { "type": "string" },
+        "height": { "type": "string" },
+        "marginTop": { "type": "string" },
+        "marginBottom": { "type": "string" },
+        "marginLeft": { "type": "string" },
+        "marginRight": { "type": "string" }
+      }
+    },
+    "fontSize": {
+      "type": "number",
+      "description": "Font size for Markdown rendering (points). Min 5, max 30.",
+      "minimum": 5,
+      "maximum": 30
+    },
+    "textColor": {
+      "type": "string",
+      "description": "Hex color for text. Applies to Markdown mode.",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
+    },
+    "fontFamily": {
+      "type": "string",
+      "description": "Font family for Markdown mode."
+    },
+    "includeTimestamp": {
+      "type": "boolean",
+      "description": "Include a timestamp in the PDF. Applies to Markdown mode.",
+      "default": true
+    },
+    "logo": {
+      "type": "object",
+      "description": "Logo configuration for Markdown-generated PDFs.",
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the logo image."
+        },
+        "width": { "type": "string" },
+        "height": { "type": "string" }
+      }
+    }
+  }
+}
