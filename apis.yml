@@ -1,12 +1,10 @@
 aid: anvil
 name: Anvil
-description: >-
-  Anvil is a PDF infrastructure platform providing REST and GraphQL APIs for
-  filling PDF templates with JSON data, generating PDFs from HTML or Markdown,
-  collecting e-signatures (Etch), building web forms, and extracting data from
-  documents via OCR and Document AI. Designed for developers embedding paperwork
-  automation into applications across HR, insurance, financial services, and
-  legal workflows.
+description: Anvil is a PDF infrastructure platform providing REST and GraphQL APIs
+  for filling PDF templates with JSON data, generating PDFs from HTML or Markdown,
+  collecting e-signatures (Etch), building web forms, and extracting data from documents
+  via OCR and Document AI. Designed for developers embedding paperwork automation
+  into applications across HR, insurance, financial services, and legal workflows.
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/anvil/refs/heads/main/apis.yml
@@ -14,178 +12,167 @@ created: '2026-06-13'
 modified: '2026-06-13'
 specificationVersion: '0.19'
 tags:
+- PDF
+- PDF Filling
+- PDF Generation
+- E-Signatures
+- Document Automation
+- OCR
+- Document AI
+- GraphQL
+- REST
+- Workflows
+- Web Forms
+- Paperwork Automation
+apis:
+- aid: anvil:pdf-filling-api
+  name: Anvil PDF Filling API
+  description: Fill existing PDF templates with JSON data. Send structured data to
+    a PDF template and receive a filled PDF document. Supports text, checkboxes, signatures,
+    and other form fields. Returns a binary PDF stream.
+  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  humanURL: https://www.useanvil.com/products/pdf-filling-api/
+  baseURL: https://app.useanvil.com
+  tags:
   - PDF
   - PDF Filling
-  - PDF Generation
-  - E-Signatures
-  - Document Automation
-  - OCR
-  - Document AI
-  - GraphQL
   - REST
-  - Workflows
-  - Web Forms
-  - Paperwork Automation
-apis:
-  - aid: anvil:pdf-filling-api
-    name: Anvil PDF Filling API
-    description: >-
-      Fill existing PDF templates with JSON data. Send structured data to a
-      PDF template and receive a filled PDF document. Supports text, checkboxes,
-      signatures, and other form fields. Returns a binary PDF stream.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-    humanURL: https://www.useanvil.com/products/pdf-filling-api/
-    baseURL: https://app.useanvil.com
-    tags:
-      - PDF
-      - PDF Filling
-      - REST
-    properties:
-      - type: Documentation
-        url: https://www.useanvil.com/docs/api/fill-pdf/
-      - type: OpenAPI
-        url: openapi/anvil-pdf-filling-api-openapi.yml
-
-  - aid: anvil:pdf-generation-api
-    name: Anvil PDF Generation API
-    description: >-
-      Generate new PDFs dynamically from HTML/CSS, structured Markdown, or
-      Anvil's JSON-based layout definition. POST your content to
-      /api/v1/generate-pdf and receive a binary PDF stream in return.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-    humanURL: https://www.useanvil.com/docs/api/generate-pdf/
-    baseURL: https://app.useanvil.com
-    tags:
-      - PDF
-      - PDF Generation
-      - HTML to PDF
-      - REST
-    properties:
-      - type: Documentation
-        url: https://www.useanvil.com/docs/api/generate-pdf/
-      - type: OpenAPI
-        url: openapi/anvil-pdf-generation-api-openapi.yml
-
-  - aid: anvil:etch-esign-api
-    name: Anvil Etch E-Sign API
-    description: >-
-      Embed white-labeled e-signature collection into applications. Create
-      e-sign packets, route documents to multiple signers, and receive webhook
-      notifications on completion. Supports interactive, progressive, and
-      unordered signing flows (higher-tier plans).
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-    humanURL: https://www.useanvil.com/docs/api/e-signatures/
-    baseURL: https://app.useanvil.com/graphql
-    tags:
-      - E-Signatures
-      - GraphQL
-      - Etch
-    properties:
-      - type: Documentation
-        url: https://www.useanvil.com/docs/api/e-signatures/
-      - type: GraphQLReference
-        url: https://www.useanvil.com/docs/api/graphql/reference/
-
-  - aid: anvil:graphql-api
-    name: Anvil GraphQL API
-    description: >-
-      The primary query and mutation interface for Anvil. Covers e-sign packets,
-      workflows, PDF operations, webforms, and document AI. The complete schema
-      is downloadable via GET https://app.useanvil.com/graphql/sdl.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-    humanURL: https://www.useanvil.com/docs/api/graphql/
-    baseURL: https://app.useanvil.com/graphql
-    tags:
-      - GraphQL
-      - E-Signatures
-      - PDF
-      - Workflows
-    properties:
-      - type: Documentation
-        url: https://www.useanvil.com/docs/api/graphql/
-      - type: GraphQLReference
-        url: https://www.useanvil.com/docs/api/graphql/reference/
-      - type: GraphQLSchema
-        url: https://app.useanvil.com/graphql/sdl
-
-  - aid: anvil:document-ai-api
-    name: Anvil Document AI & OCR API
-    description: >-
-      Extract structured data from uploaded PDF documents using AI-powered OCR,
-      automatic field detection, box finding, and schema mapping. Accelerates
-      workflow building by inferring field structure from existing documents.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-    humanURL: https://www.useanvil.com/docs/api/document-ai/
-    baseURL: https://app.useanvil.com
-    tags:
-      - OCR
-      - Document AI
-      - Data Extraction
-      - GraphQL
-    properties:
-      - type: Documentation
-        url: https://www.useanvil.com/docs/api/document-ai/
-
-  - aid: anvil:webhooks
-    name: Anvil Webhooks
-    description: >-
-      Event-driven notifications for Anvil workflow events. Receive HTTP POST
-      callbacks when e-sign packets are completed, web forms are submitted,
-      workflow steps are finished, and more. Configurable per organization.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-    humanURL: https://www.useanvil.com/docs/api/webhooks/
-    baseURL: https://app.useanvil.com
-    tags:
-      - Webhooks
-      - Events
-      - E-Signatures
-      - Workflows
-    properties:
-      - type: Documentation
-        url: https://www.useanvil.com/docs/api/webhooks/
-
-common:
-  - type: Website
-    url: https://www.useanvil.com/
+  properties:
   - type: Documentation
-    url: https://www.useanvil.com/docs/
-  - type: GettingStarted
-    url: https://www.useanvil.com/docs/api/getting-started/
-  - type: GitHubOrg
-    url: https://github.com/anvilco
-  - type: Blog
-    url: https://www.useanvil.com/blog/
-  - type: EngineeringBlog
-    url: https://www.useanvil.com/blog/engineering/
-  - type: Pricing
-    url: https://www.useanvil.com/pricing/
-  - type: StatusPage
-    url: https://status.useanvil.com/
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/anvil-foundry
-  - type: X
-    url: https://x.com/useanvil
-  - type: OpenSource
-    url: https://www.useanvil.com/open-source/
-  - type: Postman
-    url: https://www.postman.com/anvilco
-  - type: SDKNodeJS
-    url: https://github.com/anvilco/node-anvil
-  - type: SDKPython
-    url: https://github.com/anvilco/python-anvil
-  - type: SDKCSharp
-    url: https://github.com/anvilco/dotnet-anvil
-  - type: SDKReact
-    url: https://github.com/anvilco/react-ui
+    url: https://www.useanvil.com/docs/api/fill-pdf/
+  - type: OpenAPI
+    url: openapi/anvil-pdf-filling-api-openapi.yml
+  - url: graphql/anvil-graphql.md
+    type: GraphQL
+- aid: anvil:pdf-generation-api
+  name: Anvil PDF Generation API
+  description: Generate new PDFs dynamically from HTML/CSS, structured Markdown, or
+    Anvil's JSON-based layout definition. POST your content to /api/v1/generate-pdf
+    and receive a binary PDF stream in return.
+  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  humanURL: https://www.useanvil.com/docs/api/generate-pdf/
+  baseURL: https://app.useanvil.com
+  tags:
+  - PDF
+  - PDF Generation
+  - HTML to PDF
+  - REST
+  properties:
+  - type: Documentation
+    url: https://www.useanvil.com/docs/api/generate-pdf/
+  - type: OpenAPI
+    url: openapi/anvil-pdf-generation-api-openapi.yml
+- aid: anvil:etch-esign-api
+  name: Anvil Etch E-Sign API
+  description: Embed white-labeled e-signature collection into applications. Create
+    e-sign packets, route documents to multiple signers, and receive webhook notifications
+    on completion. Supports interactive, progressive, and unordered signing flows
+    (higher-tier plans).
+  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  humanURL: https://www.useanvil.com/docs/api/e-signatures/
+  baseURL: https://app.useanvil.com/graphql
+  tags:
+  - E-Signatures
+  - GraphQL
+  - Etch
+  properties:
+  - type: Documentation
+    url: https://www.useanvil.com/docs/api/e-signatures/
   - type: GraphQLReference
     url: https://www.useanvil.com/docs/api/graphql/reference/
-  - type: Plans
-    url: plans/anvil-plans-pricing.yml
-  - type: RateLimits
-    url: rate-limits/anvil-rate-limits.yml
-  - type: FinOps
-    url: finops/anvil-finops.yml
-
+- aid: anvil:graphql-api
+  name: Anvil GraphQL API
+  description: The primary query and mutation interface for Anvil. Covers e-sign packets,
+    workflows, PDF operations, webforms, and document AI. The complete schema is downloadable
+    via GET https://app.useanvil.com/graphql/sdl.
+  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  humanURL: https://www.useanvil.com/docs/api/graphql/
+  baseURL: https://app.useanvil.com/graphql
+  tags:
+  - GraphQL
+  - E-Signatures
+  - PDF
+  - Workflows
+  properties:
+  - type: Documentation
+    url: https://www.useanvil.com/docs/api/graphql/
+  - type: GraphQLReference
+    url: https://www.useanvil.com/docs/api/graphql/reference/
+  - type: GraphQLSchema
+    url: https://app.useanvil.com/graphql/sdl
+- aid: anvil:document-ai-api
+  name: Anvil Document AI & OCR API
+  description: Extract structured data from uploaded PDF documents using AI-powered
+    OCR, automatic field detection, box finding, and schema mapping. Accelerates workflow
+    building by inferring field structure from existing documents.
+  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  humanURL: https://www.useanvil.com/docs/api/document-ai/
+  baseURL: https://app.useanvil.com
+  tags:
+  - OCR
+  - Document AI
+  - Data Extraction
+  - GraphQL
+  properties:
+  - type: Documentation
+    url: https://www.useanvil.com/docs/api/document-ai/
+- aid: anvil:webhooks
+  name: Anvil Webhooks
+  description: Event-driven notifications for Anvil workflow events. Receive HTTP
+    POST callbacks when e-sign packets are completed, web forms are submitted, workflow
+    steps are finished, and more. Configurable per organization.
+  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  humanURL: https://www.useanvil.com/docs/api/webhooks/
+  baseURL: https://app.useanvil.com
+  tags:
+  - Webhooks
+  - Events
+  - E-Signatures
+  - Workflows
+  properties:
+  - type: Documentation
+    url: https://www.useanvil.com/docs/api/webhooks/
+common:
+- type: Website
+  url: https://www.useanvil.com/
+- type: Documentation
+  url: https://www.useanvil.com/docs/
+- type: GettingStarted
+  url: https://www.useanvil.com/docs/api/getting-started/
+- type: GitHubOrg
+  url: https://github.com/anvilco
+- type: Blog
+  url: https://www.useanvil.com/blog/
+- type: EngineeringBlog
+  url: https://www.useanvil.com/blog/engineering/
+- type: Pricing
+  url: https://www.useanvil.com/pricing/
+- type: StatusPage
+  url: https://status.useanvil.com/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/anvil-foundry
+- type: X
+  url: https://x.com/useanvil
+- type: OpenSource
+  url: https://www.useanvil.com/open-source/
+- type: Postman
+  url: https://www.postman.com/anvilco
+- type: SDKNodeJS
+  url: https://github.com/anvilco/node-anvil
+- type: SDKPython
+  url: https://github.com/anvilco/python-anvil
+- type: SDKCSharp
+  url: https://github.com/anvilco/dotnet-anvil
+- type: SDKReact
+  url: https://github.com/anvilco/react-ui
+- type: GraphQLReference
+  url: https://www.useanvil.com/docs/api/graphql/reference/
+- type: Plans
+  url: plans/anvil-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/anvil-rate-limits.yml
+- type: FinOps
+  url: finops/anvil-finops.yml
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com

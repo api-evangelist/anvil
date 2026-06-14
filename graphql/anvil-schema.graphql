@@ -1,0 +1,1390 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+"""Datetime value represented in `ISO8601`."""
+scalar Date
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+The `Upload` scalar type represents a file upload. This can be either
+an object with `data`, `mimetype`, and `filename` keys, or multipart
+request with a structure described by the
+[GraphQL multipart requests specification](https://github.com/jaydenseric/graphql-multipart-request-spec).
+
+While sending up an object structure described in the example is considerably
+simpler than the multipart spec, we only support request payloads of up to 1MB.
+Content-Type `application/json` requests with sizes over the 1MB size will
+result in a `419 Request Too Large` response.
+
+If your request is larger than 1MB, use a multipart request. A very basic
+multipart GraphQL + `Upload` example using `curl`:
+
+```sh
+curl https://graphql.useanvil.com \
+  -F operations='[{ "query": "CreateCast ($file: Upload!) { createCast(file: $file) { id } }", "variables": { "file": null } }]' \
+  -F map='{ "0": ["0.variables.file"] }' \
+  -F 0=@my-file.pdf
+```
+
+Our [Node API Client](https://github.com/anvilco/node-anvil) uses multipart
+uploads by default.
+"""
+scalar Upload
+
+type Query {
+  """
+  Fetch a single `Cast`. A `Cast` is a PDF Template. See our
+  [terminology guide](/docs/api/getting-started#terminology) for more info.
+  """
+  cast(
+    eid: String!
+
+    """
+    Optional argument to request a specific version of the `Cast`. If not provided,
+    the last ***published*** version will be returned, unless it has not been published
+    in which case the latest ***draft*** version will be returned.
+
+    Providing `-1` is a special value that will return the latest
+    draft version of the `Cast`.
+    """
+    versionNumber: Int
+  ): Cast
+
+  """
+  Fetches the currently logged in user. When used in an API context, this will
+  return your API user. The `currentUser` query is useful to fetch objects
+  in your organization. e.g. your `Organization`, its `Weld`s, etc.
+  """
+  currentUser: User
+
+  """
+  Fetch a single `EtchPacket`. An `EtchPacket` represents a signature
+  packet containing PDFs, signers, signed documents. This is the result of
+  `createEtchPacket`. See the
+  [e-signature API guide](/docs/api/e-signatures) for more info.
+  """
+  etchPacket(eid: String!): EtchPacket
+
+  """
+  Fetch a single `Forge` by specifying _either_ (but not both) of the following argument sets:
+  1. Just the `eid` for the Forge if you know it.
+  2. Both the `organizationSlug` and `eidOrSlug`.
+
+  A `Forge` holds configuration for a single webform. A `Forge` defines a
+  webform's fields, the page fields are on, their types, webform logic, etc.
+  Each Forge will be a member of only one `Weld` (Workflow). See our
+  [terminology guide](/docs/api/getting-started#terminology) for more info.
+  """
+  forge(
+    organizationSlug: String
+    eidOrSlug: String
+    eid: String
+    weldDataEid: String
+    submissionEid: String
+    versionNumber: Int
+  ): Forge
+
+  """
+  Fetch a single `Organization`. You obviously will only be able to access
+  organizations you are a part of.
+  """
+  organization(organizationSlug: String!): Organization
+
+  """Fetches a single `Signer`."""
+  signer(eid: String!): Signer
+
+  """Fetches a single `Submission`. A `Submission` holds data submitted to a webform."""
+  submission(organizationSlug: String!, forgeEidOrSlug: String!, eid: String!, forceCreate: Boolean, timezone: String): Submission
+
+  """Fetch a single WebhookLog by eid."""
+  webhookLog(eid: String!): WebhookLog
+
+  """
+  Fetch a single `Weld`. This query is a good way to fetch all of a
+  Workflow's submissions (`WeldData`s). See the `Weld`'s `weldDatas`
+  resolver.
+
+  Specify either the `Weld`'s `eid` _or_ both the `Weld`'s `slug` and
+  the `Weld`'s `organizationSlug`.
+  """
+  weld(
+    eid: String
+    slug: String
+    organizationSlug: String
+    versionNumber: Int
+  ): Weld
+
+  """
+  Fetch a single `WeldData` (Workflow submission). If you need to fetch all
+  `WeldData`s for a given `Weld`, see the `weld` query.
+  """
+  weldData(eid: String!): WeldData
+}
+
+type Mutation {
+  """
+  Create a `Cast` with the specified properties. This will require you to publish the `Cast`
+  via the [`publishCast`] mutation before it will go live.
+  """
+  createCast(organizationEid: String, title: String, file: Upload!, isTemplate: Boolean = true, allowedAliasIds: [String]): Cast
+
+  """
+  Create an e-signature packet. See the
+  [Etch e-sign guide](/docs/api/e-signatures) for usage information.
+  """
+  createEtchPacket(
+    name: String
+    organizationEid: String
+    files: [EtchFile!]
+    isDraft: Boolean
+    isTest: Boolean
+    signatureEmailSubject: String
+    signatureEmailBody: String
+    signatureProvider: String
+    signaturePageOptions: JSON
+    signers: [JSON!]
+    data: JSON
+    webhookURL: String
+    replyToName: String
+    replyToEmail: String
+    enableEmails: JSON
+    createCastTemplatesFromUploads: Boolean
+    duplicateCasts: Boolean = false
+    mergePDFs: Boolean
+  ): EtchPacket
+
+  """
+  Create a `Forge` with the specified properties. This will require you to publish the `Weld`
+  via the [`publishWeld`] mutation before it will go live with the Workflow.
+  """
+  createForge(weldEid: String!, name: String!, slug: String!, config: JSON, castEid: String, castFieldIds: JSON): Forge
+
+  createSubmission(forgeEid: String!, weldDataEid: String!): Submission
+
+  createWebhook(organizationEid: String, organizationSlug: String, url: String): Organization
+
+  """Create a Webhook Action to subscribe to events on objects."""
+  createWebhookAction(
+    action: String!
+    objectType: String!
+    objectEid: String!
+    config: WebhookActionConfigInput
+    webhookEid: String
+    organizationEid: String
+    url: String
+  ): WebhookAction
+
+  """
+  Create a `Weld` with the specified properties. This will require you to publish the `Weld`
+  via the [`publishWeld`] mutation before it will go live.
+  """
+  createWeld(
+    organizationEid: String!
+    name: String
+    slug: String
+    visibility: String
+    draftStep: String
+    config: JSON
+    castEid: String
+    files: [WeldFile]
+    createCastTemplatesFromUploads: Boolean
+  ): Weld
+
+  createWeldData(weldEid: String!, weldDataGroupEid: String, isTest: Boolean = false, webhookURL: String): WeldData
+
+  destroySubmission(eid: String!): Boolean
+
+  disconnectDocusign(organizationSlug: String!): Organization
+
+  duplicateCast(eid: String!, organizationEid: String!, name: String, title: String): Cast
+
+  duplicateWeld(eid: String!, organizationEid: String!, visibility: String, name: String, slug: String): Weld
+
+  """
+  Expires the `UserToken` associated with the provided `requestTokenEid`. Any authentication attempts
+  made using that token will be rejected.
+  """
+  expireSessionToken(requestTokenEid: String!): Boolean
+
+  """
+  Expires all valid `SignerTokens` for a specific `Signer`. Signers who
+  visit links with expired tokens will be shown a "Token Expired" error.
+  """
+  expireSignerTokens(signerEid: String!): Signer
+
+  """
+  Submits data to a Workflow's webform (a `Forge`). You can use this
+  mutation to start a Workflow with data from your system and submit data to
+  an _existing_ `Submission`.
+  """
+  forgeSubmit(
+    forgeEid: String!
+    weldDataEid: String
+    submissionEid: String
+    payload: JSON!
+    enforcePayloadValidOnCreate: Boolean = true
+    currentStep: Int
+    complete: Boolean
+    isTest: Boolean = false
+    timezone: String
+    webhookURL: String
+    groupArrayId: String
+    groupArrayIndex: Int
+  ): Submission
+
+  """
+  Generate a URL for embedding the PDF template editor, the Etch packet
+  builder, or the Workflow builder in your app.
+  """
+  generateEmbedURL(
+    type: String!
+    eid: String!
+    validUntil: String
+    validForSeconds: Int
+    metadata: JSON
+  ): GenerateEmbedURLResponse
+
+  """
+  Generate a signing URL for embedded signers. See the
+  [e-sign API guide on embedding signers](/docs/api/e-signatures#controlling-the-signature-process-with-embedded-signers)
+  for more info.
+  """
+  generateEtchSignURL(signerEid: String!, clientUserId: String!): String
+
+  """Publish a `Cast` by updating the `Cast` with all un-published changes."""
+  publishCast(eid: String, title: String, description: String): Cast
+
+  """Publish a `Weld` by updating the `Weld` with all un-published changes."""
+  publishWeld(eid: String, title: String, description: String, migrateOpenWeldDatas: Boolean = true): Weld
+
+  removeEtchPacket(eid: String!): Boolean
+
+  removeWebhook(eid: String!): Organization
+
+  """Remove a Webhook Action and stop receiving Webhook calls for it."""
+  removeWebhookAction(eid: String!): Boolean
+
+  removeWeldData(eid: String!): Boolean
+
+  retryWebhookLog(eid: String!): WebhookLog
+
+  """
+  This will move a `draft` `EtchPacket` into sent mode (`status` == `sent`).
+  If the first signer is an email signer, this will kick off an email.
+  """
+  sendEtchPacket(eid: String!): EtchPacket
+
+  skipSigner(signerEid: String!): Signer
+
+  """Update a `Cast` with new properties."""
+  updateCast(
+    eid: String!
+    name: String
+    title: String
+    isTemplate: Boolean
+    config: JSON
+    configFile: Upload
+    file: Upload
+    isArchived: Boolean
+    versionNumber: Int
+    allowedAliasIds: [String]
+  ): Cast
+
+  updateEtchFree(etchTemplateEid: String!, token: String!, isEditing: Boolean, name: String, ownerName: String, ownerEmail: String, signers: JSON, fields: [JSON], castFields: [JSON]): EtchTemplate
+
+  updateEtchPacket(eid: String!, token: String, isArchived: Boolean, name: String, webhookURL: String, payload: JSON): EtchPacket
+
+  updateEtchTemplate(eid: String!, isRepeatable: Boolean, name: String, config: JSON): EtchTemplate
+
+  """Update a `Forge` with new properties."""
+  updateForge(
+    eid: String!
+    name: String
+    slug: String
+    config: JSON
+    configFile: Upload
+    isArchived: Boolean
+    isRequired: Boolean
+    title: String
+    organizationRole: String
+    unauthenticatedAuthType: String
+    versionNumber: Int
+  ): Forge
+
+  updateOrganization(organizationSlug: String!, name: String, logo: Upload, billingEmail: String, supportEmail: String, slug: String, defaultSourceId: String, signatureProvider: String, config: JSON, usePDFFillingAPI: Boolean, weldCompleteEmailRecipients: JSON, signerViewEmailRecipients: JSON, signerCompleteEmailRecipients: JSON, etchCompleteEmailRecipients: JSON, weldCompleteEmailEnableForTest: Boolean): Organization
+
+  updateOrganizationUser(role: String!, externalId: String, organizationEid: String!, userEid: String!): Organization
+
+  """
+  Update a `Signer`'s name and email address. A signer's name and email can
+  be updated as long as the signer has not completed signing or been skipped.
+  """
+  updateSigner(eid: String!, name: String, email: String): Signer
+
+  updateSubmission(eid: String!, isExcluded: Boolean): Submission
+
+  updateWebhook(eid: String!, url: String): Organization
+
+  """Update a `Weld` with new properties."""
+  updateWeld(
+    eid: String!
+    name: String
+    slug: String
+    visibility: String
+    config: JSON
+    configFile: Upload
+    isArchived: Boolean
+    expiresAt: String
+    draftStep: String
+    entryForgeId: Int
+    entryButtonText: String
+    entryButtonCopyLink: Boolean
+    signatureEmailSubject: JSON
+    signatureEmailBody: JSON
+    dataDisplayTitle: JSON
+    signatureMode: String
+    signatureProvider: String
+    lockedTitleNew: String
+    lockedDescriptionNew: String
+    lockedTitleExisting: String
+    lockedDescriptionExisting: String
+    expireAfterDaysComplete: Int
+    expireAfterDaysStart: Int
+    planEid: String
+    versionNumber: Int
+    weldCompleteEmailRecipients: JSON
+    weldCompleteEmailEnableForTest: Boolean
+    mergePDFs: Boolean
+  ): Weld
+
+  updateWeldData(eid: String!, isTest: Boolean, isArchived: Boolean, isExpired: Boolean, pin: String, webhookURL: String): WeldData
+
+  voidDocumentGroup(weldDataEid: String, eid: String, voidedReason: String!): DocumentGroup
+}
+
+"""
+A `Cast` holds configuration for a single PDF template. It defines the
+location of boxes on PDF pages, and the type of each box (e.g. date, phone
+number, etc.).
+
+`Cast` objects are used by several API features:
+
+* The [PDF filling endpoint](/docs/api/fill-pdf)
+* Etch signature packets: see the [Etch e-sign guide](/docs/api/e-signatures) for more info
+* Workflows: see the [Workflow API guide](/docs/api/workflows) for more info
+"""
+type Cast {
+  """Current version number of this Cast"""
+  versionNumber: Int
+  versionId: Int
+  latestDraftVersionNumber: Int
+
+  """Current published version number of this Cast"""
+  publishedNumber: Int
+  publishedAt: Date
+  hasUnpublishedChanges: Boolean
+  hasBeenPublished: Boolean
+  id: Int!
+  eid: String
+
+  """The file's mimetype. e.g. `application/pdf`"""
+  type: String
+
+  """The file name"""
+  name: String
+
+  """The title shown in the UI"""
+  title: String
+
+  """
+  `true` when this `Cast` was created as a template. Template casts show up in the `PDF Templates` page on your dashboard.
+  """
+  isTemplate: Boolean
+
+  """Example data payload to fill this PDF."""
+  exampleData: JSON
+
+  """Allowed `Cast` field alias IDs"""
+  allowedAliasIds: [String]
+
+  """A digestable array of objects with all the details about all fields in this PDF."""
+  fieldInfo: JSON
+  config(onlyKeys: [String] = null): JSON
+  organization: Organization
+
+  """If this `Cast` was originally copied from another `Cast`, this will be the original `Cast`."""
+  parentCast: Cast
+  createdAt: Date
+  updatedAt: Date
+  archivedAt: Date
+}
+
+type CastPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [Cast]
+}
+
+type CastVersion {
+  updatedColumns: [String]
+  name: String
+  type: String
+  title: String
+  config: JSON
+  eid: String!
+  publishedNumber: Int
+  publishedTitle: String
+  publishedDescription: String
+  publishedAt: Date
+  publishUpdatedAt: Date
+  publishingUser: User
+}
+
+type CastVersionPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [CastVersion]
+}
+
+"""
+A collection of all the final files generated with data from a `WeldData` or
+`EtchPacket`. When your users download a zip file of PDFs, that final
+collection of filled, generated, uploaded, and signed files is specified by
+the `DocumentGroup`. A `DocumentGroup` will be connected to either a
+`WeldData` or a `EtchPacket`, never both.
+"""
+type DocumentGroup {
+  id: Int!
+  eid: String
+
+  """Possible values: `sent`, `delivered`, `partial`, `declined`, `voided`, `completed`"""
+  status: String
+
+  """Possible values: `etch` or `docusign`"""
+  provider: String
+  currentRoutingStep: Int
+
+  """A file listing of all files in the `DocumentGroup`"""
+  files: [JSON]
+
+  """The parent `WeldData`. This will only exist for DocumentGroups created by a Workflow."""
+  weldData: WeldData
+
+  """The parent `EtchPacket`. This will only exist for DocumentGroups created as part of an Etch signature packet."""
+  etchPacket: EtchPacket
+  signers: [Signer]
+  providerConfig: JSON
+  finishPageConfig: JSON
+  signaturePageConfig: JSON
+
+  """The URL to download all documents as a zip file"""
+  downloadZipURL: String
+  createdAt: Date
+  updatedAt: Date
+
+  """Timestamp of when all Signers have finished signing or when all forms have been filled when no signers."""
+  completedAt: Date
+}
+
+type DocumentGroupPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [DocumentGroup]
+}
+
+"""
+Represents a single action taken by a user during the signing process. For
+example, an `EtchLog` object will be created when a user signs, downloads
+a file, voids the packet, etc.
+"""
+type EtchLog {
+  id: Int!
+  eid: String
+
+  """The action taken."""
+  action: String
+
+  """Location of the user taking the action."""
+  formattedLocation: String
+
+  """String id, often a filename, of any file related to the action taken."""
+  fileId: String
+
+  """Any action-specific information."""
+  metadata: JSON
+
+  """The Anvil `User` who took this action, if applicable."""
+  user: User
+
+  """The Signer who took the action, if applicable."""
+  signer: Signer
+  createdAt: Date
+}
+
+"""
+An `EtchPacket` represents a signature packet. `EtchPackets` packets allow you to gather signatures from multiple signers on a collection of PDFs filled with your data (see `payload`), and uploads such as images. See the [e-signature guide](/docs/api/e-signatures) for usage.
+"""
+type EtchPacket {
+  id: Int!
+  eid: String
+
+  """The name shown in the UI."""
+  name: String
+
+  """Possible values: `draft`, `sent`, `delivered`, `partial`, `declined`, `voided`, `completed`."""
+  status: String
+
+  """`true` when it is a test packet. You will not be charged for test packets. Filled and signed files will be watermarked."""
+  isTest: Boolean
+
+  """`true` when `payload` contains data that will fill PDFs"""
+  containsFillData: Boolean
+
+  """Data specified to fill PDFs in the packet."""
+  payload: JSON
+  numberRemainingSigners: Int
+
+  """URL to this `EtchPacket` in the dashboard."""
+  detailsURL: String
+
+  """The specific webhook notification URL for this `EtchPacket`."""
+  webhookURL: String
+  organization: Organization
+
+  """A `DocumentGroup` contains the documents after they have been filled and sent out for signature."""
+  documentGroup: DocumentGroup
+
+  """The `EtchTemplate` holds configuration for signers and files in the packet."""
+  etchTemplate: EtchTemplate
+
+  """Uploaded files like images included in the packet."""
+  userUploads: [UserUpload]
+
+  """An array of actions during the signing process."""
+  etchLogEvents: [EtchLog]
+
+  """An array of webhook notification calls to your server related to this `EtchPacket`."""
+  webhookLogs: [WebhookLog]
+  createdAt: Date
+  updatedAt: Date
+  archivedAt: Date
+  completedAt: Date
+}
+
+type EtchPacketPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [EtchPacket]
+}
+
+"""
+An `EtchTemplate` holds configuration for a signature packet. See the [e-signature guide](/docs/api/e-signatures) for more info on sending documents out for signatures.
+"""
+type EtchTemplate {
+  id: Int!
+  eid: String
+  name: String
+  isFree: Boolean
+  isRepeatable: Boolean
+  config: JSON
+  organization: Organization
+
+  """All `Cast` objects (fillable pdfs) included in this template."""
+  casts: [Cast]
+
+  """An array of `EtchPackets` created from this template."""
+  etchPackets: [EtchPacket]
+  userUploads: [UserUpload]
+  createdAt: Date
+  updatedAt: Date
+}
+
+"""
+A `Forge` holds configuration for a single webform. A `Forge` defines a
+webform's fields, the page fields are on, their types, webform logic, etc.
+Each Forge will be a member of only one `Weld` (Workflow).
+
+See our [Workflow API guide](/docs/api/workflows) for more info.
+"""
+type Forge {
+  """Current version number of this Forge"""
+  versionNumber: Int
+  versionId: Int
+  latestDraftVersionNumber: Int
+
+  """Current published version number of this Forge"""
+  publishedNumber: Int
+  publishedAt: Date
+  hasUnpublishedChanges: Boolean
+  hasBeenPublished: Boolean
+  id: Int!
+  eid: String
+  name: String
+  slug: String
+
+  """Is this forge required to complete the Workflow?"""
+  isRequired: Boolean
+  config(onlyKeys: [String] = null): JSON
+
+  """A list of objects describing all the fields in this webform."""
+  fieldInfo: JSON
+  weld: Weld
+  organization: Organization
+  userUploads: [UserUpload]
+  createdAt: Date
+  updatedAt: Date
+  archivedAt: Date
+
+  """Example payload to fill this webform."""
+  examplePayload: JSON
+}
+
+type ForgePage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [Forge]
+}
+
+type ForgeMap {
+  id: Int!
+  eid: String
+  forgeA: Forge
+  forgeB: Forge
+  config: JSON
+  createdAt: Date
+  updatedAt: Date
+}
+
+type ForgeVersion {
+  updatedColumns: [String]
+  name: String
+  slug: String
+  config: JSON
+  eid: String!
+  publishedNumber: Int
+  publishedTitle: String
+  publishedDescription: String
+  publishedAt: Date
+  publishUpdatedAt: Date
+  publishingUser: User
+}
+
+type ForgeVersionPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [ForgeVersion]
+}
+
+type GenerateEmbedURLResponse {
+  """The EID for the token associated with the request you just made."""
+  requestTokenEid: String!
+
+  """The URL to send your embedded User to."""
+  url: String!
+}
+
+type Invoice {
+  startDate: Date
+  endDate: Date
+  totalAmount: Float
+}
+
+type InvoiceUnitItem {
+  unitType: String
+  baseUnits: Int
+  usedUnits: Int
+  unitAmount: Float
+  totalAmount: Float
+}
+
+type InvoiceBucketItem {
+  unitType: String
+  includedUnits: Int
+  usedUnits: Int
+}
+
+type File {
+  src: String!
+  key: String!
+  name: String!
+  mimetype: String!
+  encoding: String!
+}
+
+"""An entity that encapsulates a set of Workflows, templates, users, etc."""
+type Organization {
+  id: Int!
+  eid: String
+  name: String
+  logo: JSON
+
+  """URL to your logo."""
+  logoURL: String
+  parentOrganization: Organization
+
+  """The email used for all billing related correspondence."""
+  billingEmail: String
+
+  """Your organization's support email address."""
+  supportEmail: String
+  slug: String
+  users: [User]
+  adminUsers: [User]
+  organizationUsers: [OrganizationUser]
+  organizationUserInvites: [OrganizationUserInvite]
+  isPersonal: Boolean
+  isInternal: Boolean
+  isSubscribed: Boolean
+  useTestSignatureProvider: Boolean
+  config: JSON
+  createdAt: Date
+  updatedAt: Date
+  welds(visibility: String = "live", isArchived: Boolean = false): [Weld]
+  etchTemplates: [EtchTemplate]
+  etchPackets(status: [String], isTest: Boolean = false, isArchived: Boolean = false, limit: Int = 5, offset: Int = 1): EtchPacketPage
+  weldGroups: [WeldGroup]
+  forges(isArchived: Boolean = false): [Forge]
+  forgeMaps: [ForgeMap]
+  casts(isArchived: Boolean = false, isTemplate: Boolean = null): [Cast]
+  paymentMethods: [PaymentMethod]
+  webhook: Webhook
+  webhookActions: [WebhookAction]
+  webhookLogs(limit: Int = 10, offset: Int = 1): WebhookLogPage
+  childOrganizations: [Organization]
+  subscribedPlanFeatures: JSON
+  subscriptionActivity: JSON
+  currentInvoice: Invoice
+  totalUsedUnits: Int
+  weldCompleteWebhookStats: JSON
+  weldCompleteStats: JSON
+  etchCompleteStats: JSON
+  remainingSubmissions: JSON
+  remainingEtchCompletions: JSON
+  signatureProviderType: String
+  availableSignatureProviderTypes: [String]
+}
+
+type OrganizationPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [Organization]
+}
+
+type OrganizationUser {
+  id: Int!
+
+  """Role of this user within your org. Possible values: viewer, editor, billingAdmin, admin, tokenized, api"""
+  role: String
+
+  """A place to store your external system's unique identifier for this User."""
+  externalId: String
+  user: User
+  organization: Organization
+  createdAt: Date
+  updatedAt: Date
+}
+
+"""An invite sent for a user to join your organization."""
+type OrganizationUserInvite {
+  id: Int!
+  eid: String
+
+  """Role of this user within your org. Possible values: viewer, editor, billingAdmin, admin, tokenized, api"""
+  role: String
+
+  """A place to store your external system's unique identifier for this User."""
+  externalId: String
+  name: String
+  email: String
+  organization: Organization
+  acceptedAt: Date
+  revokedAt: Date
+  createdAt: Date
+  updatedAt: Date
+}
+
+type PaymentMethod {
+  id: String!
+  type: String
+  last4: String
+  providerName: String
+  status: String
+  expMonth: Int
+  expYear: Int
+  isDefault: Boolean
+}
+
+"""
+Represents a single signer. See `Signer.status` to indicate where a signer
+is in the signing process.
+"""
+type Signer {
+  id: Int!
+  eid: String
+
+  """The `Signer`'s user-specified id set on packet creation."""
+  aliasId: String
+
+  """Possible values: `sent`, `viewed`, `delivered`, `voided`, `autoresponded`, `faxpending`, `created`, `skipped`, `declined`, `idCheckFailed`, `completed`"""
+  status: String
+
+  """Possible values: `etch` or `docusign`."""
+  provider: String
+  name: String
+  email: String
+
+  """Numeric step in the signing process where this user signs. Signers are routed in sorted order."""
+  routingOrder: Int
+
+  """Indicates the method by which the user signs. Possible values: `email`, `embedded`, or `in-person`."""
+  signActionType: String
+
+  """A Anvil `User` associated with this signer."""
+  user: User
+
+  """An associated `Submission`. This will exist for signers who sign at the end of a Workflow."""
+  submission: Submission
+
+  """A `DocumentGroup` references all signers and the documents after they have been filled and sent out for signature."""
+  documentGroup: DocumentGroup
+
+  """Get all `SignerTokens` this signer has available."""
+  signerTokens: [SignerToken]
+  createdAt: Date
+  updatedAt: Date
+
+  """Timestamp when the `Signer` has finished signing."""
+  completedAt: Date
+
+  """Your id for the person signing: a way to trace this signer back to a user in your system."""
+  clientUserId: String
+}
+
+type SignerPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [Signer]
+}
+
+"""
+Represents a token used to sign documents. See `Signer.signerTokens` to
+fetch them.
+"""
+type SignerToken {
+  id: Int!
+  eid: String
+
+  """Type of token issued. Values: `api`, `sign-now`, `notify-signer`, `view`"""
+  type: String
+
+  """Date of token expiration."""
+  validUntil: Date
+
+  """`true` when this token is valid and can be used to sign."""
+  valid: Boolean
+
+  """Date when the token was invalidated if explicitly invalidated."""
+  invalidatedAt: Date
+
+  """`true` when this token was used to sign the `Signer`'s documents."""
+  hasSigned: Boolean
+
+  """Date when the token was used to sign documents."""
+  signedAt: Date
+  signer: Signer
+}
+
+"""
+An instance of a `Forge`. A `Submission` holds the data for one webform
+submission on a particular `Forge`.
+
+See our [Workflow API guide](/docs/api/workflows) for more info.
+"""
+type Submission {
+  id: Int!
+  eid: String
+
+  """Possible values: `created`, `in-progress`, `waiting-to-sign`, `user-signed-and-waiting`, `users-turn-to-sign-ui`, `users-turn-to-sign-email`, `someone-else-signed-and-waiting`, `completed`"""
+  status: String
+
+  """The payload resolved with field aliases and field information."""
+  resolvedPayload: JSON
+
+  """The raw payload"""
+  payload: JSON
+
+  """The raw payload without types"""
+  payloadValue: JSON
+  currentStep: Int
+  totalSteps: Int
+
+  """URL to the next step in this webform."""
+  continueURL: String
+  weldData: WeldData
+  forge: Forge
+  user: User
+  signer: Signer
+  reviewData: JSON
+  completionPercentage: Float
+  isExcluded: Boolean
+  touchedByUser: Boolean
+  requestMeta: JSON
+  createdAt: Date
+  updatedAt: Date
+  completedAt: Date
+}
+
+type SubmissionPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [Submission]
+}
+
+type User {
+  id: Int!
+  eid: String
+  email: String
+  name: String
+  firstName: String
+  lastName: String
+
+  """What type of role the User has. Either `user` or `api`."""
+  role: String
+  verifiedEmail: Boolean
+  preferences: UserPreferences!
+  organizations: [Organization]
+  organizationUsers: [OrganizationUser]
+  createdAt: Date
+  updatedAt: Date
+  extra: JSON
+  numSentEtchPackets: Int
+}
+
+type UserPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [User]
+}
+
+type UserPreferences {
+  acceptedSignature: Boolean
+  name: String
+  initials: String
+  require2FA: Boolean
+}
+
+type UserUpload {
+  id: Int!
+  eid: String
+  location: String
+  user: User
+  etchPacket: EtchPacket
+  weldData: WeldData
+  forge: Forge
+  metadata: JSON
+  createdAt: Date
+  updatedAt: Date
+}
+
+"""
+A `Webhook` represents a webhook URL. Anvil will POST to webhook URLs on
+specific actions. See the [webhooks guide](/docs/api/webhooks) for
+more information.
+"""
+type Webhook {
+  id: Int!
+  eid: String
+
+  """Webhook URLs that accept notifications for any object will be `prod`. Per-object webhook URLs will have type `adhoc`."""
+  type: String
+
+  """Possible values: `active` or `inactive`."""
+  status: String
+
+  """The URL Anvil will POST to."""
+  url: String
+
+  """Use this token to make sure the request is from Anvil."""
+  token: String
+  webhookActions: [WebhookAction]
+  creationUser: User
+  organization: Organization
+  createdAt: Date
+  updatedAt: Date
+}
+
+"""
+A model that represents a subscription to actions on other objects in our system
+that would trigger a `Webhook` call.
+"""
+type WebhookAction {
+  eid: String!
+  webhook: Webhook!
+  action: String!
+  objectEid: String
+  objectType: String
+  config: JSON
+  createdAt: Date!
+  updatedAt: Date!
+  creationUser: User!
+}
+
+"""
+A `WebhookLog` represents a single webhook call to your server. See the
+[webhooks guide](/docs/api/webhooks) for more information.
+"""
+type WebhookLog {
+  id: Int!
+  eid: String
+
+  """The webhook action type, e.g. `signerComplete`."""
+  action: String
+
+  """`true` when this call was considered an error."""
+  isError: Boolean
+
+  """`true` when this call was a retry of a previous call."""
+  isRetry: Boolean
+
+  """The status code returned by your server for this call."""
+  statusCode: Int
+
+  """Time it took to complete the webhook request."""
+  millisecondsToFinish: Int
+  objectEid: String
+  rootObjectType: String
+
+  """Dashboard URL to the object that triggered the webhook event."""
+  rootObjectURL: String
+  objectMetadata: JSON
+  organization: Organization
+
+  """If this call was a retry, `originalWebhookLog` will be `WebhookLog` that was retried."""
+  originalWebhookLog: WebhookLog
+  createdAt: Date
+}
+
+type WebhookLogPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [WebhookLog]
+}
+
+"""
+A Weld is a Workflow. It holds the configuration that combines one or more
+`Forge` objects with zero or more `Cast` objects to create a Workflow.
+
+See our [Workflow API guide](/docs/api/workflows) for more info.
+"""
+type Weld {
+  """Current version number of this Weld"""
+  versionNumber: Int
+  versionId: Int
+  latestDraftVersionNumber: Int
+
+  """Current published version number of this Weld"""
+  publishedNumber: Int
+  publishedAt: Date
+  hasUnpublishedChanges: Boolean
+  hasBeenPublished: Boolean
+  id: Int!
+  eid: String
+  slug: String
+  name: String
+  visibility: String
+
+  """Config object specifying files output, signers, etc."""
+  config(onlyKeys: [String] = null): JSON
+  organization: Organization
+  hasSigners: Boolean
+  forges(isArchived: Boolean = false): [Forge]
+  casts: [Cast]
+  weldGroups: [WeldGroup]
+
+  """Fetch all the `Weld`'s `WeldData`s (Workflow submissions)"""
+  weldDatas(
+    touchedByUser: Boolean = true
+    ignoreTest: Boolean = true
+    isTest: Boolean = false
+    isArchived: Boolean = false
+    statuses: [String]
+    fromDate: Date
+    toDate: Date
+    simpleSearchTerm: String
+    eids: [String]
+    limit: Int = 5
+    offset: Int = 1
+  ): WeldDataPage
+  signatureProviderType: String
+  availableSignatureProviderTypes: [String]
+  remainingSubmissions: JSON
+  createdAt: Date
+  updatedAt: Date
+  archivedAt: Date
+  expiresAt: Date
+}
+
+type WeldPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [Weld]
+}
+
+"""
+An instance of a `Weld`. You can think of it as a "workflow submission".
+A `WeldData` references `Submission`s for all the `Forge`s (webforms)
+in the related `Weld` (workflow).
+
+See our [workflow API guide](/docs/api/workflows) for more info.
+"""
+type WeldData {
+  id: Int!
+  eid: String
+
+  """The title displayed in the UI."""
+  displayTitle: String
+
+  """Possible values: `created`, `in-progress`, `ready-to-sign`, `awaiting-signatures`, `declined`, `completed`"""
+  status: String
+
+  """`true` when it is a test workflow submission."""
+  isTest: Boolean
+
+  """This `WeldData` has expired, either by passing the `expiredAt` date, or by being locked."""
+  isExpired: Boolean
+
+  """`true` when all forms in the workflow have been filled."""
+  isComplete: Boolean
+
+  """`true` when status is `completed`: All forms have been filled, all signers have signed."""
+  isCompleteAndSigned: Boolean
+
+  """URL to the next form to be filled by the user."""
+  continueURL: String
+
+  """The specific webhook notification URL for this `WeldData`."""
+  webhookURL: String
+
+  """How complete is this workflow submission. Will be a value between 0 and 1."""
+  completionPercentage: Float
+  numberRemainingSigners: Int
+  payloadCanBeUpdated: Boolean
+  hasSigners: Boolean
+  nextSigner: Signer
+  hasPin: Boolean
+  pin: String
+  agents: JSON
+
+  """A file listing of all files available in the `WeldData`."""
+  files: [JSON]
+
+  """A file listing of all files excluded from the signing process."""
+  excludedFiles: [JSON]
+
+  """The workflow this `WeldData` is related to."""
+  weld: Weld
+  weldVersionId: Int
+
+  """An array of all the underlying `Submission` objects holding data from each webform."""
+  submissions: [Submission]
+
+  """A `DocumentGroup` contains the documents after they have been filled and sent out for signature."""
+  documentGroup: DocumentGroup
+
+  """An array of webhook notification calls to your server related to this `WeldData`."""
+  webhookLogs: [WebhookLog]
+
+  """An array of actions during the signing process."""
+  etchLogEvents: [EtchLog]
+
+  """An array of actions taken during the form filling process."""
+  weldDataLogEvents: [WeldDataLog]
+
+  """An array of files uploaded by users during the webform filling process."""
+  userUploads: [UserUpload]
+  forgesRequiringCompletion: [Forge]
+  weldDataGroup: WeldDataGroup
+  createdAt: Date
+
+  """When a column on the WeldData itself was updated."""
+  updatedAt: Date
+
+  """When the data in any child `Submission` was last updated."""
+  dataUpdatedAt: Date
+  expiresAt: Date
+  archivedAt: Date
+}
+
+type WeldDataPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [WeldData]
+}
+
+type WeldDataGroup {
+  id: Int!
+  eid: String
+  title: String
+  isTest: Boolean
+  dataUpdatedAt: Date
+  weldGroup: WeldGroup
+  weldDatas(isArchived: Boolean = false): [WeldData]
+  createdAt: Date
+  updatedAt: Date
+  archivedAt: Date
+}
+
+type WeldDataGroupPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [WeldDataGroup]
+}
+
+"""
+Represents a single action taken by a user while filling a webform within a Workflow.
+"""
+type WeldDataLog {
+  id: Int!
+  eid: String
+
+  """The action taken."""
+  action: String
+
+  """Location of the user taking the action."""
+  formattedLocation: String
+
+  """Any action-specific information."""
+  metadata: JSON
+
+  """The Anvil `User` who took this action, if applicable."""
+  user: User
+  weldData: WeldData
+  submission: Submission
+  createdAt: Date
+}
+
+type WeldGroup {
+  id: Int!
+  eid: String
+  name: String
+  slug: String
+  organization: Organization
+  welds(isArchived: Boolean = false): [Weld]
+  weldDataGroups(
+    ignoreTest: Boolean = true
+    isTest: Boolean = false
+    isArchived: Boolean = false
+    weldSlugFilter: [String]
+    limit: Int = 10
+    offset: Int = 1
+  ): WeldDataGroupPage
+  createdAt: Date
+  updatedAt: Date
+}
+
+type WeldVersion {
+  eid: String!
+  publishedNumber: Int
+  publishedTitle: String
+  publishedDescription: String
+  publishedAt: Date
+  publishUpdatedAt: Date
+  publishingUser: User
+}
+
+type WeldVersionPage {
+  rowCount: Int
+  pageCount: Int
+  page: Int
+  pageSize: Int
+  items: [WeldVersion]
+}
+
+"""
+Configuration options for a Webhook Action.
+"""
+input WebhookActionConfigInput {
+  """Whether to encrypt the data payloads delivered by the Webhook call. Defaults to `false`."""
+  encryptData: Boolean = false
+}
+
+"""
+An object used by `createEtchPacket` to specify a file. See the
+[Etch e-sign guide](/docs/api/e-signatures) for more info.
+"""
+input EtchFile {
+  """An id string set when creating the `EtchPacket`."""
+  id: String!
+  title: String
+  castEid: String
+  file: Upload
+  base64File: Upload
+  fields: [JSON!]
+  pageSizes: [JSON!]
+  fontSize: Int
+  textColor: String
+
+  """Filename set when creating the `EtchPacket`."""
+  filename: String
+
+  """For generated PDFs, set to false to disable the "Generated at XXX" timestamp at the bottom of the document."""
+  includeTimestamp: Boolean
+
+  """For generated PDFs, you can specify a logo to be rendered at the top of the document."""
+  logo: JSON
+
+  """Holds HTML/CSS to generate PDF"""
+  markup: JSON
+
+  """Holds page customizations to generate PDF"""
+  page: JSON
+}
+
+"""
+An object used by `createWeld` to specify a file.
+"""
+input WeldFile {
+  """An id string set when creating the `Weld`."""
+  id: String!
+  title: String
+  castEid: String
+  file: Upload
+  mimetype: String
+  name: String
+  src: String
+  stamp: Float
+}
