@@ -12,5 +12,17 @@
       "date": null,
       "description": "A guide examining top document automation solutions and APIs available in 2026."
     }
-  ]
+  ],
+  "repo": "anvil",
+  "feeds": [
+    {
+      "source": "https://github.com/anvilco",
+      "feed_url": "https://github.com/anvilco",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-06-14T20:42:17Z"
 }
