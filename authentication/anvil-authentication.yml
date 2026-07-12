@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/anvil-pdf-filling-api-openapi.yml, openapi/anvil-pdf-generation-api-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: HTTP Basic Auth using your Anvil API key as the username and an empty string
+    as the password.
+  sources:
+  - openapi/anvil-pdf-filling-api-openapi.yml
+  - openapi/anvil-pdf-generation-api-openapi.yml

@@ -133,6 +133,10 @@ apis:
   - type: Documentation
     url: https://www.useanvil.com/docs/api/webhooks/
 common:
+- type: DomainSecurity
+  url: security/anvil-domain-security.yml
+- type: Authentication
+  url: authentication/anvil-authentication.yml
 - type: Website
   url: https://www.useanvil.com/
 - type: Documentation
