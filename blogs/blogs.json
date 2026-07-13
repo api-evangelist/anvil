@@ -2,14 +2,14 @@
   "repo": "anvil",
   "feeds": [
     {
-      "source": "https://www.useanvil.com/blog/",
-      "feed_url": "",
+      "source": "https://github.com/anvilco",
+      "feed_url": "https://github.com/anvilco",
+      "title": "",
       "saved": 0,
-      "method": "agent-scrape",
-      "error": "JS-rendered listing, no dated posts in window"
+      "method": "none"
     }
   ],
-  "fetched": "2026-06-27T12:23:40Z",
+  "fetched": "2026-07-11T11:50:51Z",
   "post_count": 1,
   "agent_pulled": "2026-06-27"
 }
