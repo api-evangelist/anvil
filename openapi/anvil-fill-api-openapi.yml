@@ -1,10 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Anvil PDF Filling API
-  description: >-
-    Fill existing PDF templates with JSON data. Send structured data to a PDF
-    template and receive a filled PDF document. Supports text, checkboxes,
-    signatures, and other form fields. Returns a binary PDF stream.
+  title: Anvil PDF Filling Fill API
+  description: Fill existing PDF templates with JSON data. Send structured data to a PDF template and receive a filled PDF document. Supports text, checkboxes, signatures, and other form fields. Returns a binary PDF stream.
   version: 1.0.0
   contact:
     name: Anvil Support
@@ -13,37 +10,32 @@ info:
     name: Proprietary
     url: https://www.useanvil.com/terms/
 servers:
-  - url: https://app.useanvil.com
-    description: Anvil production server
-
+- url: https://app.useanvil.com
+  description: Anvil production server
 security:
-  - basicAuth: []
-
+- basicAuth: []
+tags:
+- name: Fill
 paths:
   /api/v1/fill/{pdfTemplateID}.pdf:
     post:
       operationId: fillPdf
       summary: Fill a PDF template with data
-      description: >-
-        Fill an existing PDF template with JSON data. The template must be
-        created in the Anvil app. Provide the template ID in the path and supply
-        field data in the request body. Returns binary PDF bytes on success.
+      description: Fill an existing PDF template with JSON data. The template must be created in the Anvil app. Provide the template ID in the path and supply field data in the request body. Returns binary PDF bytes on success.
       parameters:
-        - name: pdfTemplateID
-          in: path
-          required: true
-          description: The unique identifier of the PDF template to fill.
-          schema:
-            type: string
-        - name: versionNumber
-          in: query
-          required: false
-          description: >-
-            Version number of the template to fill. Use -1 to fill the
-            unpublished (draft) version.
-          schema:
-            type: integer
-            default: -1
+      - name: pdfTemplateID
+        in: path
+        required: true
+        description: The unique identifier of the PDF template to fill.
+        schema:
+          type: string
+      - name: versionNumber
+        in: query
+        required: false
+        description: Version number of the template to fill. Use -1 to fill the unpublished (draft) version.
+        schema:
+          type: integer
+          default: -1
       requestBody:
         required: true
         content:
@@ -107,16 +99,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+      tags:
+      - Fill
 components:
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-      description: >-
-        HTTP Basic Auth using your Anvil API key as the username and an empty
-        string as the password.
-
   schemas:
     FillPdfRequest:
       type: object
@@ -137,51 +122,43 @@ components:
         textColor:
           type: string
           description: Hex color code (6 digits) for text fields.
-          pattern: '^#[0-9A-Fa-f]{6}$'
+          pattern: ^#[0-9A-Fa-f]{6}$
           example: '#3E3E57'
         alignment:
           type: string
           description: Text alignment for text fields.
           enum:
-            - left
-            - center
-            - right
+          - left
+          - center
+          - right
           default: left
         fontWeight:
           type: string
           description: Font weight for text fields.
           enum:
-            - normal
-            - bold
-            - italic
-            - boldItalic
+          - normal
+          - bold
+          - italic
+          - boldItalic
           default: normal
         useInteractiveFields:
           type: boolean
-          description: >-
-            When true, preserves interactive/fillable fields in the output PDF
-            rather than flattening them.
+          description: When true, preserves interactive/fillable fields in the output PDF rather than flattening them.
           default: false
         defaultReadOnly:
           type: boolean
-          description: >-
-            When true, all fields are set as read-only in the output PDF.
+          description: When true, all fields are set as read-only in the output PDF.
           default: false
         data:
           oneOf:
-            - type: object
-              description: >-
-                Key-value pairs where keys are field aliases from the template
-                and values are the data to fill. Fields not specified will be
-                ignored.
+          - type: object
+            description: Key-value pairs where keys are field aliases from the template and values are the data to fill. Fields not specified will be ignored.
+            additionalProperties: true
+          - type: array
+            description: Array of data objects for multi-page or multi-section filling.
+            items:
+              type: object
               additionalProperties: true
-            - type: array
-              description: >-
-                Array of data objects for multi-page or multi-section filling.
-              items:
-                type: object
-                additionalProperties: true
-
     ErrorResponse:
       type: object
       properties:
@@ -202,3 +179,8 @@ components:
                 type: string
               property:
                 type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Auth using your Anvil API key as the username and an empty string as the password.
