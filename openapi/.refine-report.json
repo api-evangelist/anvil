@@ -1,0 +1,16 @@
+{
+  "provider": "anvil",
+  "sources": [
+    "anvil-fill-api-openapi.yml",
+    "anvil-generate-pdf-api-openapi.yml"
+  ],
+  "outputs": [
+    "anvil-fill-api-openapi.yml",
+    "anvil-generate-pdf-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
