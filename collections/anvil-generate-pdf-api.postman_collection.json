@@ -1,0 +1,689 @@
+{
+  "item": [
+    {
+      "id": "bf7b5fdb-39c3-415a-9a3c-8b640bdad951",
+      "name": "Generate Pdf",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "cc71650e-3f8c-4b13-ae80-04f517c34226",
+          "name": "Generate a PDF from HTML or Markdown",
+          "request": {
+            "name": "Generate a PDF from HTML or Markdown",
+            "description": {
+              "content": "Generate a new PDF from HTML/CSS content or structured Markdown. Accepts a JSON payload describing the content type and data. Returns binary PDF bytes on success. For payloads exceeding 1 MB, use multipart/form-data.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "generate-pdf"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/pdf"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{\"html\":\"<string>\",\"css\":\"<string>\"}",
+                  "type": "text",
+                  "description": "(Required) Content to render as a PDF. Format depends on the \"type\" field."
+                },
+                {
+                  "key": "type",
+                  "value": "markdown",
+                  "type": "text",
+                  "description": "Content type of the data payload. Use \"html\" for HTML/CSS content or \"markdown\" for structured Markdown sections. (This can only be one of html,markdown)"
+                },
+                {
+                  "key": "title",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "Title to encode into the PDF document metadata."
+                },
+                {
+                  "key": "page",
+                  "value": "{\"width\":\"<string>\",\"height\":\"<string>\",\"marginTop\":\"<string>\",\"marginBottom\":\"<string>\",\"marginLeft\":\"<string>\",\"marginRight\":\"<string>\"}",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "fontSize",
+                  "value": "<number>",
+                  "type": "text",
+                  "description": "Font size for Markdown rendering (points). Applies only when type is \"markdown\"."
+                },
+                {
+                  "key": "textColor",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "Hex color code for text. Applies only when type is \"markdown\"."
+                },
+                {
+                  "key": "fontFamily",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "Font family for text rendering. Applies only when type is \"markdown\"."
+                },
+                {
+                  "key": "includeTimestamp",
+                  "value": "true",
+                  "type": "text",
+                  "description": "When true, includes a timestamp in the generated PDF. Applies only when type is \"markdown\"."
+                },
+                {
+                  "key": "logo",
+                  "value": "{\"src\":\"<uri>\",\"width\":\"<string>\",\"height\":\"<string>\"}",
+                  "type": "text",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c2b614d0-f9d9-493d-bdc0-0862322c87bc",
+              "name": "Binary PDF bytes of the generated document.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "generate-pdf"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/pdf"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) Content to render as a PDF. Format depends on the \"type\" field.",
+                        "type": "text/plain"
+                      },
+                      "key": "data",
+                      "value": "{\"html\":\"<string>\",\"css\":\"<string>\"}",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Content type of the data payload. Use \"html\" for HTML/CSS content or \"markdown\" for structured Markdown sections. (This can only be one of html,markdown)",
+                        "type": "text/plain"
+                      },
+                      "key": "type",
+                      "value": "markdown",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Title to encode into the PDF document metadata.",
+                        "type": "text/plain"
+                      },
+                      "key": "title",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "page",
+                      "value": "{\"width\":\"<string>\",\"height\":\"<string>\",\"marginTop\":\"<string>\",\"marginBottom\":\"<string>\",\"marginLeft\":\"<string>\",\"marginRight\":\"<string>\"}",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Font size for Markdown rendering (points). Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "fontSize",
+                      "value": "<number>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Hex color code for text. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "textColor",
+                      "value": "#333333",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Font family for text rendering. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "fontFamily",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "When true, includes a timestamp in the generated PDF. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "includeTimestamp",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "logo",
+                      "value": "{\"src\":\"<uri>\",\"width\":\"<string>\",\"height\":\"<string>\"}",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/pdf"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2460aae6-fe60-491d-92de-5884574bdef7",
+              "name": "Validation error in the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "generate-pdf"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) Content to render as a PDF. Format depends on the \"type\" field.",
+                        "type": "text/plain"
+                      },
+                      "key": "data",
+                      "value": "{\"html\":\"<string>\",\"css\":\"<string>\"}",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Content type of the data payload. Use \"html\" for HTML/CSS content or \"markdown\" for structured Markdown sections. (This can only be one of html,markdown)",
+                        "type": "text/plain"
+                      },
+                      "key": "type",
+                      "value": "markdown",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Title to encode into the PDF document metadata.",
+                        "type": "text/plain"
+                      },
+                      "key": "title",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "page",
+                      "value": "{\"width\":\"<string>\",\"height\":\"<string>\",\"marginTop\":\"<string>\",\"marginBottom\":\"<string>\",\"marginLeft\":\"<string>\",\"marginRight\":\"<string>\"}",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Font size for Markdown rendering (points). Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "fontSize",
+                      "value": "<number>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Hex color code for text. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "textColor",
+                      "value": "#333333",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Font family for text rendering. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "fontFamily",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "When true, includes a timestamp in the generated PDF. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "includeTimestamp",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "logo",
+                      "value": "{\"src\":\"<uri>\",\"width\":\"<string>\",\"height\":\"<string>\"}",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"ValidationError\",\n  \"message\": \"string\",\n  \"fields\": [\n    {\n      \"message\": \"string\",\n      \"property\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"property\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "47cba2c4-3181-4be7-8b6d-a4cf035ca1fc",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "generate-pdf"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) Content to render as a PDF. Format depends on the \"type\" field.",
+                        "type": "text/plain"
+                      },
+                      "key": "data",
+                      "value": "{\"html\":\"<string>\",\"css\":\"<string>\"}",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Content type of the data payload. Use \"html\" for HTML/CSS content or \"markdown\" for structured Markdown sections. (This can only be one of html,markdown)",
+                        "type": "text/plain"
+                      },
+                      "key": "type",
+                      "value": "markdown",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Title to encode into the PDF document metadata.",
+                        "type": "text/plain"
+                      },
+                      "key": "title",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "page",
+                      "value": "{\"width\":\"<string>\",\"height\":\"<string>\",\"marginTop\":\"<string>\",\"marginBottom\":\"<string>\",\"marginLeft\":\"<string>\",\"marginRight\":\"<string>\"}",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Font size for Markdown rendering (points). Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "fontSize",
+                      "value": "<number>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Hex color code for text. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "textColor",
+                      "value": "#333333",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Font family for text rendering. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "fontFamily",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "When true, includes a timestamp in the generated PDF. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "includeTimestamp",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "logo",
+                      "value": "{\"src\":\"<uri>\",\"width\":\"<string>\",\"height\":\"<string>\"}",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"ValidationError\",\n  \"message\": \"string\",\n  \"fields\": [\n    {\n      \"message\": \"string\",\n      \"property\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"property\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6e0929d1-59c3-40c8-96c1-eead0284da9c",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "generate-pdf"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) Content to render as a PDF. Format depends on the \"type\" field.",
+                        "type": "text/plain"
+                      },
+                      "key": "data",
+                      "value": "{\"html\":\"<string>\",\"css\":\"<string>\"}",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Content type of the data payload. Use \"html\" for HTML/CSS content or \"markdown\" for structured Markdown sections. (This can only be one of html,markdown)",
+                        "type": "text/plain"
+                      },
+                      "key": "type",
+                      "value": "markdown",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Title to encode into the PDF document metadata.",
+                        "type": "text/plain"
+                      },
+                      "key": "title",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "page",
+                      "value": "{\"width\":\"<string>\",\"height\":\"<string>\",\"marginTop\":\"<string>\",\"marginBottom\":\"<string>\",\"marginLeft\":\"<string>\",\"marginRight\":\"<string>\"}",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Font size for Markdown rendering (points). Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "fontSize",
+                      "value": "<number>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Hex color code for text. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "textColor",
+                      "value": "#333333",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Font family for text rendering. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "fontFamily",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "When true, includes a timestamp in the generated PDF. Applies only when type is \"markdown\".",
+                        "type": "text/plain"
+                      },
+                      "key": "includeTimestamp",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "logo",
+                      "value": "{\"src\":\"<uri>\",\"width\":\"<string>\",\"height\":\"<string>\"}",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying.",
+                  "key": "Retry-After",
+                  "value": "9956"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Limit",
+                  "value": "9956",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9956",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Reset",
+                  "value": "9956",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"ValidationError\",\n  \"message\": \"string\",\n  \"fields\": [\n    {\n      \"message\": \"string\",\n      \"property\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"property\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.useanvil.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "8c53391b-abd4-4515-9e9a-88312b493ac4",
+    "name": "Anvil PDF Filling Fill Generate Pdf API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Fill existing PDF templates with JSON data. Send structured data to a PDF template and receive a filled PDF document. Supports text, checkboxes, signatures, and other form fields. Returns a binary PDF stream.\n\nContact Support:\n Name: Anvil Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anvil PDF Filling Fill Generate Pdf API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Generate Pdf",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate a PDF from HTML or Markdown",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.useanvil.com/api/v1/generate-pdf",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate a new PDF from HTML/CSS content or structured Markdown. Accepts a JSON payload describing the content type and data. Returns binary PDF bytes on success. For payloads exceeding 1 MB, use multipart/form-data."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

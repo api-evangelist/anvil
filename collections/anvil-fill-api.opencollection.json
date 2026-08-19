@@ -1,0 +1,54 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anvil PDF Filling Fill API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Fill",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Fill a PDF template with data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.useanvil.com/api/v1/fill/:pdfTemplateID.pdf",
+            "params": [
+              {
+                "name": "pdfTemplateID",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the PDF template to fill."
+              },
+              {
+                "name": "versionNumber",
+                "value": "",
+                "type": "query",
+                "description": "Version number of the template to fill. Use -1 to fill the unpublished (draft) version."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fill an existing PDF template with JSON data. The template must be created in the Anvil app. Provide the template ID in the path and supply field data in the request body. Returns binary PDF bytes on success."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
