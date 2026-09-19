@@ -41,6 +41,19 @@ tags:
 - PDF
 - PDF Filling
 - PDF Generation
+- E-Signature
+- Document Automation
+- OCR
+- Document AI
+- GraphQL
+- REST
+- Workflows
+- Web Forms
+- Paperwork Automation
+tags_raw:
+- PDF
+- PDF Filling
+- PDF Generation
 - E-Signatures
 - Document Automation
 - OCR
@@ -61,6 +74,10 @@ apis:
   humanURL: https://www.useanvil.com/docs/api/e-signatures/
   baseURL: https://app.useanvil.com/graphql
   tags:
+  - E-Signature
+  - GraphQL
+  - Etch
+  tags_raw:
   - E-Signatures
   - GraphQL
   - Etch
@@ -78,6 +95,11 @@ apis:
   humanURL: https://www.useanvil.com/docs/api/graphql/
   baseURL: https://app.useanvil.com/graphql
   tags:
+  - GraphQL
+  - E-Signature
+  - PDF
+  - Workflows
+  tags_raw:
   - GraphQL
   - E-Signatures
   - PDF
@@ -117,7 +139,7 @@ apis:
   tags:
   - Webhook
   - Event
-  - E-Signatures
+  - E-Signature
   - Workflows
   tags_raw:
   - Webhooks
