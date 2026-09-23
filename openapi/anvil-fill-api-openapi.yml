@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Anvil PDF Filling Fill API
   description: Fill existing PDF templates with JSON data. Send structured data to a PDF template and receive a filled PDF document. Supports text, checkboxes, signatures, and other form fields. Returns a binary PDF stream.
@@ -103,6 +103,26 @@ paths:
       - Fill
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Error type name.
+          example: ValidationError
+        message:
+          type: string
+          description: Human-readable error message.
+        fields:
+          type: array
+          description: Field-level validation errors.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              property:
+                type: string
     FillPdfRequest:
       type: object
       properties:
@@ -159,26 +179,6 @@ components:
             items:
               type: object
               additionalProperties: true
-    ErrorResponse:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Error type name.
-          example: ValidationError
-        message:
-          type: string
-          description: Human-readable error message.
-        fields:
-          type: array
-          description: Field-level validation errors.
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              property:
-                type: string
   securitySchemes:
     basicAuth:
       type: http

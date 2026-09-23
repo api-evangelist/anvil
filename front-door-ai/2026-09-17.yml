@@ -1,0 +1,31 @@
+# Front Door AI Index — anvil — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: anvil
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.useanvil.com
+  final_host: www.useanvil.com
+  ownership: own
+  owner: anvil
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 22
+  host_score: 22
+  density: 11.54
+  words: 1906
+  tiers:
+    agentic: 9
+    core: 12
+    model: 1
+  ambiguous: 12
+  top_terms:
+    AI: 12
+    agent: 11
+    AI agent: 5
+    MCP: 3
+    Claude: 1
+    automation: 1
+    embedding: 1

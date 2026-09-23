@@ -1,8 +1,8 @@
 {
   "provider": "anvil",
   "sources": [
-    "anvil-fill-api-openapi.yml",
-    "anvil-generate-pdf-api-openapi.yml"
+    "_original/anvil-pdf-filling-api-openapi.yml",
+    "_original/anvil-pdf-generation-api-openapi.yml"
   ],
   "outputs": [
     "anvil-fill-api-openapi.yml",
@@ -11,6 +11,18 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "anvil-pdf-filling-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "anvil-pdf-filling-api-openapi.yml: tagged paths POST /api/v1/fill/{pdfTemplateID}.pdf -> Fill",
+    "anvil-pdf-filling-api-openapi.yml: declared missing tag: Fill",
+    "anvil-pdf-generation-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "anvil-pdf-generation-api-openapi.yml: tagged paths POST /api/v1/generate-pdf -> Generate Pdf",
+    "anvil-pdf-generation-api-openapi.yml: declared missing tag: Generate Pdf",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "anvil-fill-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anvil-generate-pdf-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

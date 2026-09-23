@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Anvil PDF Filling Fill Generate Pdf API
-  description: Fill existing PDF templates with JSON data. Send structured data to a PDF template and receive a filled PDF document. Supports text, checkboxes, signatures, and other form fields. Returns a binary PDF stream.
+  title: Anvil PDF Generation Generate Pdf API
+  description: Generate new PDFs dynamically from HTML/CSS, structured Markdown, or Anvil's JSON-based layout definition. POST your content to /api/v1/generate-pdf and receive a binary PDF stream in return.
   version: 1.0.0
   contact:
     name: Anvil Support
@@ -96,6 +96,36 @@ paths:
       - Generate Pdf
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Error type name.
+          example: ValidationError
+        message:
+          type: string
+          description: Human-readable error message.
+        fields:
+          type: array
+          description: Field-level validation errors.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              property:
+                type: string
+    HtmlPdfData:
+      type: object
+      description: HTML/CSS content for PDF generation.
+      properties:
+        html:
+          type: string
+          description: HTML markup string to render as a PDF.
+        css:
+          type: string
+          description: CSS stylesheet string to apply to the HTML content.
     GeneratePdfRequest:
       type: object
       required:
@@ -153,16 +183,6 @@ components:
         height:
           type: string
           description: Logo display height.
-    HtmlPdfData:
-      type: object
-      description: HTML/CSS content for PDF generation.
-      properties:
-        html:
-          type: string
-          description: HTML markup string to render as a PDF.
-        css:
-          type: string
-          description: CSS stylesheet string to apply to the HTML content.
     MarkdownPdfSection:
       type: object
       description: A single section of structured Markdown content.
@@ -199,26 +219,6 @@ components:
         marginRight:
           type: string
           description: Right margin.
-    ErrorResponse:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Error type name.
-          example: ValidationError
-        message:
-          type: string
-          description: Human-readable error message.
-        fields:
-          type: array
-          description: Field-level validation errors.
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              property:
-                type: string
   securitySchemes:
     basicAuth:
       type: http
