@@ -96,36 +96,42 @@ paths:
       - Generate Pdf
 components:
   schemas:
-    ErrorResponse:
+    LogoSettings:
       type: object
+      description: Logo configuration for Markdown-generated PDFs.
       properties:
-        name:
+        src:
           type: string
-          description: Error type name.
-          example: ValidationError
-        message:
+          format: uri
+          description: URL of the logo image.
+        width:
           type: string
-          description: Human-readable error message.
-        fields:
-          type: array
-          description: Field-level validation errors.
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              property:
-                type: string
-    HtmlPdfData:
+          description: Logo display width.
+        height:
+          type: string
+          description: Logo display height.
+    PageSettings:
       type: object
-      description: HTML/CSS content for PDF generation.
+      description: Page size and margin settings.
       properties:
-        html:
+        width:
           type: string
-          description: HTML markup string to render as a PDF.
-        css:
+          description: Page width (e.g., "8.5in", "216mm").
+        height:
           type: string
-          description: CSS stylesheet string to apply to the HTML content.
+          description: Page height (e.g., "11in", "279mm").
+        marginTop:
+          type: string
+          description: Top margin (e.g., "1in", "25.4mm").
+        marginBottom:
+          type: string
+          description: Bottom margin.
+        marginLeft:
+          type: string
+          description: Left margin.
+        marginRight:
+          type: string
+          description: Right margin.
     GeneratePdfRequest:
       type: object
       required:
@@ -169,20 +175,36 @@ components:
           default: true
         logo:
           $ref: '#/components/schemas/LogoSettings'
-    LogoSettings:
+    ErrorResponse:
       type: object
-      description: Logo configuration for Markdown-generated PDFs.
       properties:
-        src:
+        name:
           type: string
-          format: uri
-          description: URL of the logo image.
-        width:
+          description: Error type name.
+          example: ValidationError
+        message:
           type: string
-          description: Logo display width.
-        height:
+          description: Human-readable error message.
+        fields:
+          type: array
+          description: Field-level validation errors.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              property:
+                type: string
+    HtmlPdfData:
+      type: object
+      description: HTML/CSS content for PDF generation.
+      properties:
+        html:
           type: string
-          description: Logo display height.
+          description: HTML markup string to render as a PDF.
+        css:
+          type: string
+          description: CSS stylesheet string to apply to the HTML content.
     MarkdownPdfSection:
       type: object
       description: A single section of structured Markdown content.
@@ -197,28 +219,6 @@ components:
           type: object
           description: Optional table data to include in this section.
           additionalProperties: true
-    PageSettings:
-      type: object
-      description: Page size and margin settings.
-      properties:
-        width:
-          type: string
-          description: Page width (e.g., "8.5in", "216mm").
-        height:
-          type: string
-          description: Page height (e.g., "11in", "279mm").
-        marginTop:
-          type: string
-          description: Top margin (e.g., "1in", "25.4mm").
-        marginBottom:
-          type: string
-          description: Bottom margin.
-        marginLeft:
-          type: string
-          description: Left margin.
-        marginRight:
-          type: string
-          description: Right margin.
   securitySchemes:
     basicAuth:
       type: http

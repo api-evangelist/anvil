@@ -103,26 +103,6 @@ paths:
       - Fill
 components:
   schemas:
-    ErrorResponse:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Error type name.
-          example: ValidationError
-        message:
-          type: string
-          description: Human-readable error message.
-        fields:
-          type: array
-          description: Field-level validation errors.
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              property:
-                type: string
     FillPdfRequest:
       type: object
       properties:
@@ -179,6 +159,26 @@ components:
             items:
               type: object
               additionalProperties: true
+    ErrorResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Error type name.
+          example: ValidationError
+        message:
+          type: string
+          description: Human-readable error message.
+        fields:
+          type: array
+          description: Field-level validation errors.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              property:
+                type: string
   securitySchemes:
     basicAuth:
       type: http
