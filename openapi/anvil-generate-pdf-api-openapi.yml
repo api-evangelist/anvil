@@ -96,20 +96,20 @@ paths:
       - Generate Pdf
 components:
   schemas:
-    MarkdownPdfSection:
+    LogoSettings:
       type: object
-      description: A single section of structured Markdown content.
+      description: Logo configuration for Markdown-generated PDFs.
       properties:
-        label:
+        src:
           type: string
-          description: Section heading or label.
-        content:
+          format: uri
+          description: URL of the logo image.
+        width:
           type: string
-          description: Markdown-formatted text content for this section.
-        table:
-          type: object
-          description: Optional table data to include in this section.
-          additionalProperties: true
+          description: Logo display width.
+        height:
+          type: string
+          description: Logo display height.
     HtmlPdfData:
       type: object
       description: HTML/CSS content for PDF generation.
@@ -120,6 +120,26 @@ components:
         css:
           type: string
           description: CSS stylesheet string to apply to the HTML content.
+    ErrorResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Error type name.
+          example: ValidationError
+        message:
+          type: string
+          description: Human-readable error message.
+        fields:
+          type: array
+          description: Field-level validation errors.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              property:
+                type: string
     PageSettings:
       type: object
       description: Page size and margin settings.
@@ -142,40 +162,6 @@ components:
         marginRight:
           type: string
           description: Right margin.
-    ErrorResponse:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Error type name.
-          example: ValidationError
-        message:
-          type: string
-          description: Human-readable error message.
-        fields:
-          type: array
-          description: Field-level validation errors.
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              property:
-                type: string
-    LogoSettings:
-      type: object
-      description: Logo configuration for Markdown-generated PDFs.
-      properties:
-        src:
-          type: string
-          format: uri
-          description: URL of the logo image.
-        width:
-          type: string
-          description: Logo display width.
-        height:
-          type: string
-          description: Logo display height.
     GeneratePdfRequest:
       type: object
       required:
@@ -219,6 +205,20 @@ components:
           default: true
         logo:
           $ref: '#/components/schemas/LogoSettings'
+    MarkdownPdfSection:
+      type: object
+      description: A single section of structured Markdown content.
+      properties:
+        label:
+          type: string
+          description: Section heading or label.
+        content:
+          type: string
+          description: Markdown-formatted text content for this section.
+        table:
+          type: object
+          description: Optional table data to include in this section.
+          additionalProperties: true
   securitySchemes:
     basicAuth:
       type: http
