@@ -64,55 +64,171 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Anvil is a PDF infrastructure platform providing REST and GraphQL APIs for filling PDF templates with JSON data, generating PDFs from HTML or Markdown, collecting e-signatures (Etch), building web forms, and extracting data from documents via OCR and Document AI. It is designed for developers embedding paperwork automation into applications across HR, insurance, financial services, and legal workflows.
+Anvil is a PDF infrastructure platform providing REST and GraphQL APIs for filling PDF templates with JSON data, generating PDFs from HTML or Markdown, collecting e-signatures (Etch), building web forms, and extracting data from documents via OCR and Document AI. Designed for developers embedding paperwork automation into applications across HR, insurance, financial services, and legal workflows.
 
-- **Website:** https://www.useanvil.com/
-- **Developer Docs:** https://www.useanvil.com/docs/
-- **GitHub Org:** https://github.com/anvilco
-- **Pricing:** https://www.useanvil.com/pricing/
-- **Status:** https://status.useanvil.com/
-- **Blog:** https://www.useanvil.com/blog/
-- **LinkedIn:** https://www.linkedin.com/company/anvil-foundry
-- **X:** https://x.com/useanvil
+**Areas:** PDF · PDF Filling · PDF Generation · E-Signature · Document Automation · OCR · Document AI · GraphQL · REST · Workflows · Web Forms · Paperwork Automation
 
-## APIs
+## Anvil on APIs.io
 
-| API | Type | Description |
-|-----|------|-------------|
-| PDF Filling API | REST | Fill existing PDF templates with JSON data |
-| PDF Generation API | REST | Generate PDFs from HTML, CSS, or Markdown |
-| Etch E-Sign API | GraphQL | Embed white-labeled e-signature collection |
-| GraphQL API | GraphQL | Primary interface for all Anvil operations |
-| Document AI & OCR API | GraphQL | Extract structured data from uploaded documents |
-| Webhooks | Events | Receive HTTP callbacks for workflow events |
+Everything profiled for Anvil is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/anvil/](https://apis.io/providers/anvil/)** — or go straight to one of the APIs or properties below.
 
-## Authentication
+### APIs (6)
 
-API keys using HTTP Basic Auth. Two key types: development (watermarked, 4 req/sec) and production (plan-based limits). Keys are server-side only — not for browser use.
+- [Anvil Etch E-Sign API](https://apis.io/apis/anvil/etch-esign-api/) — Embed white-labeled e-signature collection into applications. Create e-sign packets, route documents to multiple signers, and receive webhook notifications…
+- [Anvil GraphQL API](https://apis.io/apis/anvil/graphql-api/) — The primary query and mutation interface for Anvil. Covers e-sign packets, workflows, PDF operations, webforms, and document AI. The complete schema is…
+- [Anvil Document AI & OCR API](https://apis.io/apis/anvil/document-ai-api/) — Extract structured data from uploaded PDF documents using AI-powered OCR, automatic field detection, box finding, and schema mapping. Accelerates workflow…
+- [Anvil Webhooks](https://apis.io/apis/anvil/webhooks/) — Event-driven notifications for Anvil workflow events. Receive HTTP POST callbacks when e-sign packets are completed, web forms are submitted, workflow steps…
+- [Anvil Fill API](https://apis.io/apis/anvil/anvil-fill-api/) — The Fill API from Anvil — 1 operation(s) for fill.
+- [Anvil Generate Pdf API](https://apis.io/apis/anvil/anvil-generate-pdf-api/) — The Generate Pdf API from Anvil — 1 operation(s) for generate pdf.
 
-## SDKs
+### Published properties
 
-- Node.js: https://github.com/anvilco/node-anvil
-- Python: https://github.com/anvilco/python-anvil
-- C#/.NET: https://github.com/anvilco/dotnet-anvil
-- React UI: https://github.com/anvilco/react-ui
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## Pricing Summary
+#### GraphQL (1)
 
-| Plan | Monthly | Annual | Rate Limit |
-|------|---------|--------|------------|
-| Free | $0 | $0 | 4 req/sec |
-| AI Pack | $99 | $79/mo | 4 req/sec |
-| Product Pack | $425 | $340/mo | 40 req/sec |
-| Enterprise | Custom | Custom | Custom |
+GraphQL schemas.
 
-Overages: $0.10/PDF, $1.00/workflow submission, $1.50/e-sign packet.
+- [Anvil GraphQL API](https://apis.io/graphqls/anvil/anvil-graphql/)
 
-## Repository Structure
+#### MCP servers (1)
 
-```
-apis.yml                          # APIs.json 0.19 index
-plans/anvil-plans-pricing.yml     # API Commons Plans 0.1
-rate-limits/anvil-rate-limits.yml # API Commons Rate Limits 0.1
-finops/anvil-finops.yml           # FinOps Framework 1.0 FOCUS-aligned
-```
+Model Context Protocol servers that expose the API to agents.
+
+- [anvil](https://apis.io/servers/anvil/anvil/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Anvil Agentic Access](https://apis.io/agentic-access/anvil/anvil-agentic-access/)
+
+#### JSON Schema (2)
+
+The data models the API reads and writes.
+
+- [Anvil Fill PDF Request](https://apis.io/schemas/anvil/anvil-fill-pdf-request/)
+- [Anvil Generate PDF Request](https://apis.io/schemas/anvil/anvil-generate-pdf-request/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Anvil Context](https://apis.io/jsonld/anvil/anvil-context/)
+
+#### Vocabulary (1)
+
+The provider's domain terms, defined.
+
+- [Anvil API Vocabulary](https://apis.io/vocabularies/anvil/anvil-vocabulary/)
+
+#### Examples (2)
+
+Example requests and responses.
+
+- [Anvil Fill Pdf Example](https://apis.io/examples/anvil/anvil-fill-pdf-example/)
+- [Anvil Generate Pdf Html Example](https://apis.io/examples/anvil/anvil-generate-pdf-html-example/)
+
+#### Collections (2)
+
+Postman and Open Collection request collections.
+
+- [Anvil PDF Filling Fill API](https://apis.io/collections/anvil/open-anvil-fill-api/)
+- [Anvil PDF Filling Fill Generate Pdf API](https://apis.io/collections/anvil/open-anvil-generate-pdf-api/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Anvil — jsonschema rules](https://apis.io/rules/anvil/anvil-jsonschema-spectral-rules/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Anvil Authentication](https://apis.io/security/anvil/anvil-authentication/)
+- [Anvil Domain Security](https://apis.io/security/anvil/anvil-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Anvil Plans Pricing](https://apis.io/plans/anvil/anvil-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Anvil Rate Limits](https://apis.io/rate-limits/anvil/anvil-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Anvil Finops](https://apis.io/finops/anvil/anvil-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.useanvil.com/)
+- [Documentation](https://www.useanvil.com/docs/)
+- [Getting started](https://www.useanvil.com/docs/api/getting-started/)
+- [Pricing](https://www.useanvil.com/pricing/)
+- [Blog](https://www.useanvil.com/blog/)
+- [Status](https://status.useanvil.com/)
+
+## API Evangelist rating
+
+**Kin Score 38.5** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 63.7 |
+| Contract governance | 9.8 |
+| Operational transparency | 28.9 |
+| Developer ergonomics | 38.1 |
+| Access clarity | 18.4 |
+
+**Agent readiness 57.9** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 16.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/anvil/](https://apis.io/providers/anvil/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Anvil: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/anvil/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
